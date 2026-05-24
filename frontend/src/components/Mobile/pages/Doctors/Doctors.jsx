@@ -1,7 +1,6 @@
 import API_BASE_URL from '../../../../apiConfig';
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Select from "react-select";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -482,7 +481,7 @@ Appointment Time: ${bookingDetails.appointmentTime}
               }}
             >
               <div className={styles.labAvatar} style={{ width: "100%", height: "120px", borderRadius: "10px" }}>
-                <img src={dept.img} alt={dept.title} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src={dept.img} alt={dept.title} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
               <h3 className={styles.labName} style={{ marginTop: "10px", fontWeight: "bold" }}>{dept.title}</h3>
               <p style={{ fontSize: "0.75rem", color: "#666", textAlign: "center", display: "-webkit-box", WebkitLineClamp: "3", WebkitBoxOrient: "vertical", overflow: "hidden" }}>

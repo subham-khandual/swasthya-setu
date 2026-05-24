@@ -20,6 +20,8 @@ function LandingPage() {
             src={landingpageimage1}
             alt="Smart Healthcare"
             className="img-fluid rounded mb-4"
+            loading="lazy"
+            decoding="async"
             style={{
               width: "80vw", // Set width to 80% of the viewport width
               height: "auto", // Maintain aspect ratio

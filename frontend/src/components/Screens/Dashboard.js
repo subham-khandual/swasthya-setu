@@ -143,6 +143,8 @@ function Dashboard() {
                   <img 
                     src={item.img} 
                     alt={item.title} 
+                    loading="lazy"
+                    decoding="async"
                     className={styles.cardImage} 
                     style={{
                       ...(item.title === 'Profile' ? { objectPosition: 'top' } : {}),

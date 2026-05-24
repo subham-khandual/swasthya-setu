@@ -101,7 +101,7 @@ function Header() {
     <nav className="navbar navbar-expand-lg navbar-dark fixed-top sticky-top" style={{ backgroundColor: '#1b558b' }}>
       <div className="container">
         <Link className="navbar-brand title-animate" to="/landingpage" style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>
-          <img src={logo} alt="" style={{ height: "40px", width: "40px", boxShadow: "0px 0px 10px black", border: "2px solid #1b558b", borderRadius: "50%" }} />Swasthya Setu
+          <img src={logo} alt="" loading="lazy" decoding="async" style={{ height: "40px", width: "40px", boxShadow: "0px 0px 10px black", border: "2px solid #1b558b", borderRadius: "50%" }} />Swasthya Setu
         </Link>
 
         {/* Hamburger icon (only visible on smaller devices) */}

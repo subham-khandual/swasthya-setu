@@ -125,6 +125,8 @@ function AdminRegister() {
                                 src={adminLoginImg}
                                 alt="Admin Register"
                                 className="img-fluid"
+                                loading="lazy"
+                                decoding="async"
                                 style={{
                                     borderRadius: '15px',
                                     objectFit: 'cover',

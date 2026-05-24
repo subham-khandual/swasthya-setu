@@ -4,7 +4,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Select from "react-select";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import {
   Search,
   MapPin,
@@ -369,7 +368,7 @@ const BloodTest = () => {
                 }}
               >
                 <div className={styles.labAvatar} style={{ width: "100%", height: "140px", borderRadius: "0", margin: "0", border: "none" }}>
-                  <img src={labImg} alt={lab["Patholab Name"]} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                  <img src={labImg} alt={lab["Patholab Name"]} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                 </div>
                 <div style={{ padding: "15px", width: "100%" }}>
                   <h3 className={styles.labName} style={{ textAlign: "left", fontSize: "1rem", fontWeight: "700", marginBottom: "5px" }}>{lab["Patholab Name"]}</h3>

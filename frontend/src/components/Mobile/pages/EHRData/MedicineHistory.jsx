@@ -1,6 +1,5 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { FileText, ChevronRight, AlertCircle } from "lucide-react";
 import { toast } from "react-toastify";
 import styles from "../BloodTest/BloodTest.module.css";

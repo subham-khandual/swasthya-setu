@@ -109,6 +109,8 @@ function AdminLogin() {
                                 src={adminLoginImg}
                                 alt="Admin Login"
                                 className="img-fluid"
+                                loading="lazy"
+                                decoding="async"
                                 style={{
                                     borderRadius: '15px',
                                     objectFit: 'cover',

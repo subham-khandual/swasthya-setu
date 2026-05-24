@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Select from "react-select";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -325,6 +324,8 @@ const NutritionistDietPlan = () => {
           src={nutritionImage}
           alt="Nutrition Banner"
           className={styles.nutritionImage}
+          loading="lazy"
+          decoding="async"
           onError={(e) => console.error("Failed to load nutrition image:", e)}
         />
       </div>
@@ -389,6 +390,8 @@ const NutritionistDietPlan = () => {
                 <img
                   src={nutritionist.imageUrl}
                   alt={nutritionist.name}
+                  loading="lazy"
+                  decoding="async"
                 className="diet-tip-image"
                 onError={(e) => (e.target.src = "https://placehold.co/60x60")} // Fallback image
               />

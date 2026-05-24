@@ -2,7 +2,6 @@ import API_BASE_URL from '../../../../apiConfig';
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Select from "react-select";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -403,7 +402,7 @@ const Medicine = () => {
           {getTopRatedPharmacies(stores, userLocation).map((store, index) => (
             <div key={index} className={styles.labCard} onClick={() => navigate("/medicine-all", { state: { medicines: store.Medicines, storeName: store.StoreName } })}>
               <div className={styles.labAvatar}>
-                <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt={store.StoreName} />
+                <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt={store.StoreName} loading="lazy" decoding="async" />
               </div>
               <h3 className={styles.labName}>{store.StoreName}</h3>
               <p className={styles.labDistance}>Distance: {store.distance.toFixed(2)} km</p>

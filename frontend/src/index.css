@@ -8,13 +8,26 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
-/* \\landing page */
-/* Custom Styling */
-body {
-  font-family: 'Arial', sans-serif;
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+.animated {
+  animation-duration: 1s;
+  animation-fill-mode: both;
+}
+
+.fadeIn {
+  animation-name: fadeIn;
 }
 
 .hero {
@@ -37,6 +50,8 @@ body {
   height: 100%;
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
 }
 
 .card-header {
@@ -45,7 +60,8 @@ body {
 }
 
 .card-body {
-  padding: 20px;
+  padding: 2rem;
+  flex-grow: 1;
 }
 
 .card-body h4, .card-body h5 {
@@ -54,6 +70,10 @@ body {
 
 .card-body p {
   color: #555;
+}
+
+.card-body .btn-custom {
+  margin-top: 20px;
 }
 
 .btn-custom {
@@ -78,40 +98,6 @@ body {
   background-color: #1b558b;
 }
 
-.card-body .btn-custom {
-  margin-top: 20px;
-}
-
-/* Ensuring consistent card heights */
-.card-custom {
-  display: flex;
-  flex-direction: column;
-}
-
-.card-body {
-  flex-grow: 1;
-}
-
-
-/* FadeIn animation */
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.animated {
-  animation-duration: 1s;
-  animation-fill-mode: both;
-}
-
-.fadeIn {
-  animation-name: fadeIn;
-}
-
 .btn {
   transition: transform 0.2s ease, background-color 0.3s ease;
 }
@@ -121,9 +107,6 @@ body {
   background-color: #145a6d;
 }
 
-
-/* dashboard */
-/* General Styles */
 .container {
   font-family: 'Arial', sans-serif;
 }
@@ -132,6 +115,7 @@ h2 {
   font-weight: 700;
   font-size: 2.5rem;
   text-transform: uppercase;
+  color: #1b558b;
 }
 
 .card {
@@ -141,13 +125,13 @@ h2 {
   overflow: hidden;
 }
 
-.card-body {
-  padding: 2rem;
-}
-
 .card-hover:hover {
   transform: translateY(-10px);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card-hover {
+  background-color: #f8f9fa;
 }
 
 .card-title {
@@ -160,7 +144,6 @@ h2 {
   color: #555;
 }
 
-/* Button Styles */
 .btn-animate {
   transition: transform 0.2s ease, background-color 0.3s ease-in-out;
   text-transform: uppercase;
@@ -176,103 +159,18 @@ h2 {
   outline: none;
 }
 
-/* Hover and Fade In Effects */
-.card-title, .card-text {
-  opacity: 0;
-  animation: fadeIn 0.6s ease-in-out forwards;
-}
-
-.card-title {
-  animation-delay: 0.2s;
-}
-
-.card-text {
-  animation-delay: 0.4s;
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-/* Additional Color and Animations */
-.card-hover {
-  background-color: #f8f9fa;
-}
-
-h2 {
-  animation: fadeIn 1s ease-in-out;
-  color: #1b558b;
-}
-
-.card-body {
-  animation: fadeIn 1s ease-in-out;
-}
-
-
-
-/* login animation */
-/* General styles for animation */
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.animated {
-  animation: fadeIn 0.6s ease-in-out forwards;
-}
-
-.card-animate {
-  animation: fadeIn 1s ease-in-out;
-}
-
-/* Button hover animation */
-.btn-animate {
-  transition: transform 0.2s ease, background-color 0.3s ease-in-out;
-}
-
-.btn-animate:hover {
-  transform: scale(1.05);
-  background-color: #145a6d;
-}
-
-/* Color Customization */
 .text-primary {
   color: #1b558b !important;
-}
-
-.card {
-  border-radius: 10px;
-  background-color: #fff;
-}
-
-.card-body {
-  padding: 2rem;
 }
 
 .form-control {
   border-radius: 5px;
 }
 
-h2 {
-  font-weight: 700;
-  font-size: 2.5rem;
-  text-transform: uppercase;
-}
-
 p {
   font-size: 1rem;
 }
 
-/* Responsive Design */
 @media (max-width: 767px) {
   h2 {
     font-size: 2rem;
@@ -292,85 +190,6 @@ p {
   }
 }
 
-/* register animation  */
-/* General styles for animation */
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-.animated {
-  animation: fadeIn 0.6s ease-in-out forwards;
-}
-
-.card-animate {
-  animation: fadeIn 1s ease-in-out;
-}
-
-/* Button hover animation */
-.btn-animate {
-  transition: transform 0.2s ease, background-color 0.3s ease-in-out;
-}
-
-.btn-animate:hover {
-  transform: scale(1.05);
-  background-color: #145a6d;
-}
-
-/* Color Customization */
-.text-primary {
-  color: #1b558b !important;
-}
-
-.card {
-  border-radius: 10px;
-  background-color: #fff;
-}
-
-.card-body {
-  padding: 2rem;
-}
-
-.form-control {
-  border-radius: 5px;
-}
-
-h2 {
-  font-weight: 700;
-  font-size: 2.5rem;
-  text-transform: uppercase;
-}
-
-p {
-  font-size: 1rem;
-}
-
-/* Responsive Design */
-@media (max-width: 767px) {
-  h2 {
-    font-size: 2rem;
-  }
-
-  .form-group label {
-    font-size: 1rem;
-  }
-
-  .form-control {
-    font-size: 1rem;
-  }
-
-  .btn {
-    padding: 12px;
-    font-size: 1.1rem;
-  }
-}
-
-
-/* doctorpage sidebar */
 .sidebar {
   position: fixed;
   top: 0;
@@ -395,8 +214,6 @@ p {
   display: block;
 }
 
-/* animation in dr page */
-/* Doctorpage.css */
 .page-container {
   background-color: #f8f9fa;
   height: 100vh;
@@ -429,7 +246,7 @@ p {
   border: 8px solid transparent;
   background-image: linear-gradient(45deg, #ff007f, #ff7f00, #7f00ff, #00ff7f, #007fff);
   background-size: 400% 400%;
-  z-index: -1; /* Ensure the circle is behind the image */
+  z-index: -1;
 }
 
 .fade-in {
@@ -441,34 +258,13 @@ p {
   animation: bounce 1s ease infinite;
 }
 
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-
-/* chat bot */
-/* Chat Bot Icon Styling */
 .chat-bot-icon {
   position: fixed;
   bottom: 80px;
   right: 20px;
   cursor: pointer;
   z-index: 1000;
-  background-color: #9b59b6; /* Purple background */
+  background-color: #9b59b6;
   border-radius: 50%;
   width: 70px;
   height: 70px;
@@ -481,7 +277,7 @@ p {
 }
 
 .chat-bot-icon:hover {
-  background-color: #8e44ad; /* Darker purple on hover */
+  background-color: #8e44ad;
   transform: scale(1.1);
 }
 
@@ -491,33 +287,31 @@ p {
   font-size: 16px;
   font-family: 'Arial', sans-serif;
 }
+
 .chat-bot-icon::after {
   background-color: #b30033;
 }
 
-/* Removed old img styles */
-
-/* Modal Styling */
 .custom-modal .modal-content {
-  border: none; /* Remove white border */
+  border: none;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  overflow: hidden; /* Hide scrollbar */
+  overflow: hidden;
 }
 
 .modal-header-custom {
-  border-bottom: none; /* Remove header border */
+  border-bottom: none;
   padding: 10px 15px;
-  background-color: #007bff; /* Blue header */
+  background-color: #007bff;
   color: white;
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
 }
 
 .modal-header-custom .close {
-  color: white; /* White close button */
+  color: white;
   opacity: 0.8;
-  margin-left: auto; /* Push the close button to the right */
+  margin-left: auto;
 }
 
 .modal-header-custom .close:hover {
@@ -525,37 +319,32 @@ p {
 }
 
 .modal-body-custom {
-  padding: 0; /* Remove padding to make iframe fit perfectly */
-  overflow: hidden; /* Hide scrollbar */
+  padding: 0;
+  overflow: hidden;
 }
 
 .modal-footer-custom {
-  border-top: none; /* Remove footer border */
+  border-top: none;
   padding: 10px 15px;
-  background-color: #f8f9fa; /* Light gray footer */
+  background-color: #f8f9fa;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
 }
 
 .modal-footer-custom .btn-primary {
-  background-color: #007bff; /* Blue button */
+  background-color: #007bff;
   border: none;
 }
 
 .modal-footer-custom .btn-primary:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #0056b3;
 }
 
-/* Hide scrollbar for the modal */
 .custom-modal::-webkit-scrollbar {
-  display: none; /* Hide scrollbar for Chrome, Safari, and Opera */
+  display: none;
 }
 
 .custom-modal {
-  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
-  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
-
-
-
-

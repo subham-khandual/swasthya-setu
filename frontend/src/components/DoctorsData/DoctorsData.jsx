@@ -366,7 +366,7 @@ const DoctorsData = () => {
               </div>
               {formData.profilePhotoPreview && (
                 <div className={styles.profilePhotoPreview}>
-                  <img src={formData.profilePhotoPreview} alt="Profile Preview" />
+                  <img src={formData.profilePhotoPreview} alt="Profile Preview" loading="lazy" decoding="async" />
                   {!formData.profilePhotoConfirmed ? (
                     <button
                       type="button"
@@ -1233,7 +1233,7 @@ const DoctorsData = () => {
               </div>
               {formData.digitalSignaturePreview && (
                 <div className={styles.signaturePreview}>
-                  <img src={formData.digitalSignaturePreview} alt="Signature Preview" />
+                  <img src={formData.digitalSignaturePreview} alt="Signature Preview" loading="lazy" decoding="async" />
                   {!formData.digitalSignatureConfirmed ? (
                     <button
                       type="button"

@@ -99,6 +99,8 @@ function DoctorLogin() {
             src="https://drgalen.org/assets/img/doctor-login.png"
             alt="Doctor Login"
             className="img-fluid"
+            loading="lazy"
+            decoding="async"
             style={{
               borderRadius: '15px',
               objectFit: 'cover',

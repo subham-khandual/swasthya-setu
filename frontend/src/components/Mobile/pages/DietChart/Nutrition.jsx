@@ -155,7 +155,9 @@ const Nutrition = () => {
           src={nutritionImage}
           alt="Nutrition Banner"
           className={styles.nutritionImage}
-          onError={(e) => console.error("Failed to load nutrition image:", e)} // Error handling for image load
+          loading="lazy"
+          decoding="async"
+          onError={(e) => console.error("Failed to load nutrition image:", e)}
         />
       </div>
 

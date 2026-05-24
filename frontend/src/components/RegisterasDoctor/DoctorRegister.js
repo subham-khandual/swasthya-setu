@@ -241,6 +241,8 @@ function DoctorRegister() {
             src="/doctor_registration_hero.png"
             alt="Doctor Registration"
             className="img-fluid"
+            loading="lazy"
+            decoding="async"
             style={{ borderRadius: '15px', objectFit: 'cover' }}
           />
         </div>

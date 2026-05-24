@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import chatbot from "../assets/interactional-dialogue.png";

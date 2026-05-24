@@ -70,6 +70,8 @@ const MedicineStore = () => {
                   src={medicine.imageUrl || 'https://placehold.co/150x150'} 
                   alt={medicine.name} 
                   className="medicine-image" 
+                  loading="lazy" 
+                  decoding="async" 
                 />
                 <div className="medicine-details">
                   <h3>{medicine.name}</h3>

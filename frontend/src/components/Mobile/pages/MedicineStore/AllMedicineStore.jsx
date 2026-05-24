@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -151,7 +150,7 @@ const AllMedicineStore = () => {
               onClick={() => navigate("/medicine-all", { state: { medicines: store.Medicines, storeName: store.StoreName } })}
             >
               <div className={styles.labAvatar}>
-                <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt={store.StoreName} />
+                <img src="https://cdn-icons-png.flaticon.com/512/684/684908.png" alt={store.StoreName} loading="lazy" decoding="async" />
               </div>
               <h3 className={styles.labName}>{store.StoreName}</h3>
               <p className={styles.labDistance}>

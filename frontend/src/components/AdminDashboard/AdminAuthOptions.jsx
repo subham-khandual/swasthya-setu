@@ -27,6 +27,8 @@ function AdminAuthOptions() {
                         src={adminLoginImg}
                         alt="Admin Auth"
                         className="img-fluid"
+                        loading="lazy"
+                        decoding="async"
                         style={{
                             borderRadius: '20px',
                             objectFit: 'cover',

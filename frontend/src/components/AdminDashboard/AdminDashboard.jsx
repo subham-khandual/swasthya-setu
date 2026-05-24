@@ -699,7 +699,7 @@ const AdminDashboard = () => {
             
             <div className={styles.sidebar}>
                 <div className={styles.profileSection}>
-                    <img src={adminImage} alt="Admin" className={styles.adminImg} />
+                    <img src={adminImage} alt="Admin" className={styles.adminImg} fetchpriority="high" decoding="async" />
                     <h3 className="mb-1" style={{ fontSize: '18px', fontWeight: '700' }}>Admin Panel</h3>
                     <p className="small mb-0 opacity-75">Swasthya Setu HQ</p>
                 </div>
@@ -736,7 +736,7 @@ const AdminDashboard = () => {
                             <span className="badge bg-success" style={{ fontSize: '10px' }}>SYSTEM ONLINE</span>
                             <p className="small text-muted mb-0">{new Date().toLocaleDateString()}</p>
                         </div>
-                        <img src={adminImage} alt="Profile" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
+                        <img src={adminImage} alt="Profile" loading="lazy" decoding="async" style={{ width: '40px', height: '40px', borderRadius: '50%', objectFit: 'cover' }} />
                     </div>
                 </header>
 

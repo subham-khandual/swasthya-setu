@@ -38,7 +38,7 @@ const Profile = () => {
       <div className={styles.header}>
         <h1 className={styles.title}>Your Profile</h1>
         <div className={styles.avatar}>
-          <img src={userIcon} alt="User Profile" />
+          <img src={userIcon} alt="User Profile" loading="lazy" decoding="async" />
         </div>
       </div>
 

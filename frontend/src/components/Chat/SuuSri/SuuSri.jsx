@@ -457,7 +457,7 @@ const Chat = () => {
   return (
     <div className={styles.chatContainer}>
       <div className={styles.header}>
-        <img src={suusriAvatar} alt="Suusri Avatar" className={styles.avatar} />
+        <img src={suusriAvatar} alt="Suusri Avatar" className={styles.avatar} loading="lazy" decoding="async" />
         <div className={styles.headerInfo}>
           <span className={styles.headerTitle}>Suusri</span>
           <span className={styles.headerSubtitle}>Smart Universal AI Assistant</span>

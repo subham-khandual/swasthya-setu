@@ -14,7 +14,7 @@ const Welcome = () => {
 
   return (
     <div className={styles.container}>
-      <img src={logo} alt="Logo" className={styles.logo} />
+      <img src={logo} alt="Logo" className={styles.logo} fetchpriority="high" decoding="async" />
     </div>
   );
 };

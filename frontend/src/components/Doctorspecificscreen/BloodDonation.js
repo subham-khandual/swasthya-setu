@@ -1,5 +1,4 @@
 import API_BASE_URL from '../../apiConfig';
-import 'bootstrap/dist/css/bootstrap.min.css'; // Ensure Bootstrap is imported
 import { ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Tooltip } from 'chart.js';
 import React, { useEffect, useState } from 'react';
 import { Bar, Doughnut, Pie } from 'react-chartjs-2';

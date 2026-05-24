@@ -62,6 +62,8 @@ const CartPage = () => {
                 src={item.imageUrl || 'https://placehold.co/80x80'} 
                 alt={item.name} 
                 className="item-image"
+                loading="lazy" 
+                decoding="async" 
               />
               
               <div className="item-details">

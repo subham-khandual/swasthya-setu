@@ -1,7 +1,6 @@
 import API_BASE_URL from '../../../../apiConfig';
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Select from "react-select";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -273,7 +272,7 @@ const MedicineAll = () => {
               <div key={index} className={styles.labCard}>
                 <div className={styles.labAvatar}>
                   {medicine.Image ? (
-                    <img src={medicine.Image} alt={medicine.Name} style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
+                    <img src={medicine.Image} alt={medicine.Name} loading="lazy" decoding="async" style={{ width: "100%", height: "100%", borderRadius: "50%", objectFit: "cover" }} />
                   ) : (
                     <Pill size={24} />
                   )}

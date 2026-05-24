@@ -1,7 +1,6 @@
 import API_BASE_URL from '../../../../apiConfig';
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Select from "react-select";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -297,7 +296,7 @@ const HospitalDashboard = () => {
         <div className={styles.hospitalsGrid}>
           {getNearestHospitals().map((hospital, index) => (
             <div key={index} className={styles.hospitalCard} onClick={() => { setSelectedHospital(hospital); setIsBookingPopupOpen(true); }}>
-              <img src={hospital.imageUrl} alt={hospital.name} className={styles.hospitalImage} />
+              <img src={hospital.imageUrl} alt={hospital.name} className={styles.hospitalImage} loading="lazy" decoding="async" />
               <h3>{hospital.name}</h3>
               <p>Distance: {hospital.distance.toFixed(2)} km</p>
               <p>Available Beds: {hospital.bedAvailability.general}</p>

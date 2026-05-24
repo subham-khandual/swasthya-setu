@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import "bootstrap/dist/css/bootstrap.min.css";
 import Select from "react-select";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -253,7 +252,7 @@ const AllHospitals = () => {
           {filteredHospitals.map((hospital, index) => (
             <div key={index} className={styles.labCard}>
               <div className={styles.labAvatar}>
-                <img src={hospital.imageUrl} alt={hospital.name} />
+                <img src={hospital.imageUrl} alt={hospital.name} loading="lazy" decoding="async" />
               </div>
               <h3 className={styles.labName}>{hospital.name}</h3>
               <p className={styles.labDistance}>Distance: {hospital.distance ? hospital.distance.toFixed(2) : "N/A"} km</p>

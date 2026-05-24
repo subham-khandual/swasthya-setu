@@ -14,7 +14,7 @@ const NotFound = () => {
 
       <div className={styles.glassCard}>
         <div className={styles.gifContainer}>
-          <img src={fnf} alt="Not Found" className={styles.gif} />
+          <img src={fnf} alt="Not Found" className={styles.gif} loading="lazy" decoding="async" />
         </div>
         
         <h1 className={styles.errorCode}>404</h1>

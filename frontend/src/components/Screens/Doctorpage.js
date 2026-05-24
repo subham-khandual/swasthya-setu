@@ -1,4 +1,3 @@
-import 'bootstrap/dist/css/bootstrap.min.css'; // Assuming you're using Bootstrap
 import React from 'react';
 
 function Doctorpage() {
@@ -8,9 +7,11 @@ function Doctorpage() {
         {/* Doctor's Welcome Image with Rotating Gradient Circle */}
         <div className="image-wrapper mb-4" style={{ position: 'relative', display: 'inline-block' }}>
           <img
-            src="https://img.freepik.com/premium-photo/photo-doctor-with-stethoscope-plain-medical-background_763111-13168.jpg" // Placeholder image (replace with actual doctor's image)
+            src="https://img.freepik.com/premium-photo/photo-doctor-with-stethoscope-plain-medical-background_763111-13168.jpg"
             alt="Doctor"
-            className="doctor-image rounded-circle" // Class for the image
+            loading="lazy"
+            decoding="async"
+            className="doctor-image rounded-circle"
             style={{ width: '250px', height: '250px', objectFit: 'cover' }}
           />
           <div
