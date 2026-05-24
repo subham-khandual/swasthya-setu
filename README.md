@@ -132,7 +132,6 @@ If you'd like to contribute to this project, feel free to open an issue or submi
 ## License
 
 This project is licensed under the MIT License - see the [suusri-health-care-ai-assistant.vercel.app
-Resources
 ](SUUSRI) file for details.
 
 ### Key Sections Breakdown:
