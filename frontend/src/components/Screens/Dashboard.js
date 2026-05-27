@@ -145,6 +145,8 @@ function Dashboard() {
                     alt={item.title} 
                     loading="lazy"
                     decoding="async"
+                    width="400"
+                    height="225"
                     className={styles.cardImage} 
                     style={{
                       ...(item.title === 'Profile' ? { objectPosition: 'top' } : {}),

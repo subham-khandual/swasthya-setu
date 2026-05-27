@@ -168,7 +168,7 @@
   align-items: center;
   background: none;
   border: none;
-  color: #3498db;
+  color: #2980b9;
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
@@ -176,7 +176,7 @@
 }
 
 .seeMoreBtn:hover {
-  color: #2980b9;
+  color: #1b558b;
 }
 
 .doctorsGrid {
@@ -226,7 +226,7 @@
 }
 
 .doctorSpecialty {
-  color: #3498db;
+  color: #2980b9;
   font-size: 0.8rem;
   margin-bottom: 5px;
   text-align: center;
@@ -245,7 +245,7 @@
 }
 
 .rating {
-  color: #7f8c8d;
+  color: #596263;
   font-size: 0.8rem;
 }
 
@@ -587,12 +587,12 @@
 }
 
 .navIcon.active {
-  color: #3498db;
+  color: #2980b9;
 }
 
 .navLabel {
   font-size: 0.7rem;
-  color: #7f8c8d;
+  color: #596263;
   font-family: "Open Sans", sans-serif;
   margin-top: 5px;
 }

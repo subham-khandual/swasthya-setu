@@ -398,7 +398,7 @@ Appointment Time: ${bookingDetails.appointmentTime}
             <p style="font-size: 18px; margin: 10px 0; font-family: 'Open Sans', sans-serif;"><strong style="color: #2c3e50;">Longitude:</strong> ${bookingDetails.longitude}</p>
           ` : ""}
           ${bookingDetails.appointmentType === "Video Consultation" ? `
-            <p style="font-size: 18px; margin: 10px 0; font-family: 'Open Sans', sans-serif;"><strong style="color: #2c3e50;">Virtual Meeting URL:</strong> <a href="${bookingDetails.virtualMeetingUrl}" target="_blank" style="color: #27ae60;">${bookingDetails.virtualMeetingUrl}</a></p>
+            <p style="font-size: 18px; margin: 10px 0; font-family: 'Open Sans', sans-serif;"><strong style="color: #2c3e50;">Virtual Meeting URL:</strong> <a href="${bookingDetails.virtualMeetingUrl}" target="_blank" rel="noopener noreferrer" style="color: #27ae60;">${bookingDetails.virtualMeetingUrl}</a></p>
           ` : ""}
         </div>
         <p style="font-size: 14px; color: #666666; margin-top: 15px; font-family: 'Open Sans', sans-serif;">

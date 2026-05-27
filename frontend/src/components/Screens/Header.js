@@ -101,7 +101,7 @@ function Header() {
     <nav className="navbar navbar-expand-lg navbar-dark fixed-top sticky-top" style={{ backgroundColor: '#1b558b' }}>
       <div className="container">
         <Link className="navbar-brand title-animate" to="/landingpage" style={{ fontWeight: 'bold', fontSize: '1.5rem' }}>
-          <img src={logo} alt="" loading="lazy" decoding="async" style={{ height: "40px", width: "40px", boxShadow: "0px 0px 10px black", border: "2px solid #1b558b", borderRadius: "50%" }} />Swasthya Setu
+          <img src={logo} alt="Swasthya Setu Logo" loading="lazy" decoding="async" width="40" height="40" style={{ height: "40px", width: "40px", boxShadow: "0px 0px 10px black", border: "2px solid #1b558b", borderRadius: "50%" }} />Swasthya Setu
         </Link>
 
         {/* Hamburger icon (only visible on smaller devices) */}
@@ -244,8 +244,8 @@ function Header() {
         }}
       >
         <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '1rem' }}>
-          <button onClick={closeMenu} style={{ background: 'none', border: 'none', color: 'white' }}>
-            <FaTimes size={24} />
+          <button onClick={closeMenu} style={{ background: 'none', border: 'none', color: 'white' }} aria-label="Close menu">
+            <FaTimes size={24} aria-hidden="true" />
           </button>
         </div>
 

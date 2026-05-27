@@ -81,50 +81,93 @@ const Home = () => {
       <div className={styles.header}>
         <h1 className={styles.greeting}>Hello {userName}</h1>
         <div className={styles.headerActions}>
-          <div className={styles.notificationBell} onClick={() => navigateTo("/notifications")}>
-            <Bell size={24} color="#2c3e50" />
+          <div 
+            className={styles.notificationBell} 
+            onClick={() => navigateTo("/notifications")}
+            role="button"
+            tabIndex={0}
+            aria-label="Notifications"
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigateTo("/notifications"); }}
+          >
+            <Bell size={24} color="#2c3e50" aria-hidden="true" />
             {unreadCount > 0 && <span className={styles.badge}>{unreadCount}</span>}
           </div>
-          <div className={styles.avatar}>
+          <div 
+            className={styles.avatar}
+            onClick={() => navigateTo("/profile")}
+            role="button"
+            tabIndex={0}
+            aria-label="User Profile"
+            onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigateTo("/profile"); }}
+          >
             <img 
                 src={usericon} 
-                alt="User" 
-                onClick={() => navigateTo("/profile")}
+                alt="User Profile" 
                 fetchpriority="high"
                 decoding="async"
+                width="80"
+                height="80"
               />
           </div>
         </div>
       </div>
 
       <div className={styles.cardGrid}>
-        <div className={`${styles.card} ${styles.purpleCard}`} onClick={() => navigateTo("/blood-donate-receive")}>
+        <div 
+          className={`${styles.card} ${styles.purpleCard}`} 
+          onClick={() => navigateTo("/blood-donate-receive")}
+          role="button"
+          tabIndex={0}
+          aria-label="Blood Donate & Receive"
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigateTo("/blood-donate-receive"); }}
+        >
           <div className={styles.iconContainer}>
-            <Droplet className={styles.greenIcon} /> {/* Green icon for purple card */}
+            <Droplet className={styles.greenIcon} aria-hidden="true" />
           </div>
           <h3 className={styles.cardTitle}>Blood Donate & Receive</h3>
           <p className={styles.cardSubtitle}>Donate or Request Blood</p>
         </div>
 
-        <div className={`${styles.card} ${styles.greenCard}`} onClick={() => navigateTo("/accident-alert")}>
+        <div 
+          className={`${styles.card} ${styles.greenCard}`} 
+          onClick={() => navigateTo("/accident-alert")}
+          role="button"
+          tabIndex={0}
+          aria-label="Accident Alert"
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigateTo("/accident-alert"); }}
+        >
           <div className={styles.iconContainer}>
-            <Alert className={styles.purpleIcon} /> {/* Purple icon for green card */}
+            <Alert className={styles.purpleIcon} aria-hidden="true" />
           </div>
           <h3 className={styles.cardTitle}>Accident Alert</h3>
           <p className={styles.cardSubtitle}>Emergency Response</p>
         </div>
 
-        <div className={`${styles.card} ${styles.greenCard}`} onClick={() => navigateTo("/blood-test")}>
+        <div 
+          className={`${styles.card} ${styles.greenCard}`} 
+          onClick={() => navigateTo("/blood-test")}
+          role="button"
+          tabIndex={0}
+          aria-label="Blood Test"
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigateTo("/blood-test"); }}
+        >
           <div className={styles.iconContainer}>
-            <TestTube className={styles.purpleIcon} /> {/* Purple icon for green card */}
+            <TestTube className={styles.purpleIcon} aria-hidden="true" />
           </div>
           <h3 className={styles.cardTitle}>Blood Test</h3>
           <p className={styles.cardSubtitle}>Book an Appointment</p>
         </div>
 
-        <div className={`${styles.card} ${styles.purpleCard}`} onClick={() => navigateTo("/medicine")}>
+        <div 
+          className={`${styles.card} ${styles.purpleCard}`} 
+          onClick={() => navigateTo("/medicine")}
+          role="button"
+          tabIndex={0}
+          aria-label="Medicine"
+          onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') navigateTo("/medicine"); }}
+        >
           <div className={styles.iconContainer}>
-            <MedicalServices className={styles.greenIcon} /> {/* Green icon for purple card */}
+            <MedicalServices className={styles.greenIcon} aria-hidden="true" />
           </div>
           <h3 className={styles.cardTitle}>Medicine</h3>
           <p className={styles.cardSubtitle}>Order Online Medicine</p>
@@ -142,13 +185,13 @@ const Home = () => {
           {doctors.map((doctor, index) => (
             <div key={index} className={styles.doctorCard}>
               <div className={styles.doctorAvatar}>
-                <img src={doctor.img} alt={doctor.name} loading="lazy" decoding="async" />
+                <img src={doctor.img} alt={`Doctor ${doctor.name}`} loading="lazy" decoding="async" width="60" height="60" />
               </div>
               <h3 className={styles.doctorName}>{doctor.name}</h3>
               <p className={styles.doctorSpecialty}>{doctor.specialization}</p>
               <div className={styles.ratingContainer}>
-                <Star className={styles.starIcon} />
-                <span className={styles.rating}>{doctor.rating}</span>
+                <Star className={styles.starIcon} aria-hidden="true" />
+                <span className={styles.rating} aria-label={`Rating ${doctor.rating}`}>{doctor.rating}</span>
               </div>
             </div>
           ))}
@@ -233,9 +276,17 @@ const Home = () => {
 
 const SectionCard = ({ icon, iconColor, backgroundColor, title, subtitle, onClick }) => {
   return (
-    <div className={styles.sectionCard} style={{ backgroundColor }} onClick={onClick}>
+    <div 
+      className={styles.sectionCard} 
+      style={{ backgroundColor }} 
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      aria-label={title}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onClick(); }}
+    >
       <div className={styles.sectionIconContainer}>
-        <div className={styles.sectionIcon} style={{ color: iconColor }}>
+        <div className={styles.sectionIcon} style={{ color: iconColor }} aria-hidden="true">
           {icon}
         </div>
       </div>

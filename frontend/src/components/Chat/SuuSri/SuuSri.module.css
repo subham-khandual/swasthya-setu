@@ -3,13 +3,11 @@
 .chatContainer {
   display: flex;
   flex-direction: column;
-  height: 85vh;
-  max-width: 800px;
-  margin: 20px auto;
-  border-radius: 20px;
+  height: 100%;
+  max-width: 100%;
+  margin: 0;
   background-color: #0f172a;
   overflow: hidden;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255,255,255,0.1);
   font-family: 'Inter', sans-serif;
   color: #f1f5f9;
 }
@@ -343,8 +341,6 @@
 
 @media (max-width: 600px) {
   .chatContainer {
-    margin: 0;
-    height: 100vh;
-    border-radius: 0;
+    height: 100%;
   }
 }

@@ -47,40 +47,60 @@ const NavBar = () => {
         <div
           className={`${styles.navItem} ${activeIndex === 0 ? styles.selected : ""}`}
           onClick={() => handleNavigation(0)}
+          role="button"
+          tabIndex={0}
+          aria-label="Home"
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleNavigation(0); }}
         >
-          <HomeIcon className={styles.navIcon} />
+          <HomeIcon className={styles.navIcon} aria-hidden="true" />
           <span className={styles.navLabel}>Home</span>
         </div>
 
         <div
           className={`${styles.navItem} ${activeIndex === 1 ? styles.selected : ""}`}
           onClick={() => handleNavigation(1)}
+          role="button"
+          tabIndex={0}
+          aria-label="Donate Blood"
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleNavigation(1); }}
         >
-          <Droplet className={styles.navIcon} />
+          <Droplet className={styles.navIcon} aria-hidden="true" />
           <span className={styles.navLabel}>Donate</span>
         </div>
 
         <div
           className={`${styles.navItem} ${activeIndex === 2 ? styles.selected : ""}`}
           onClick={() => handleNavigation(2)}
+          role="button"
+          tabIndex={0}
+          aria-label="SuuSri Chat Bot"
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleNavigation(2); }}
         >
-          <Bot className={styles.navIcon} />
+          <Bot className={styles.navIcon} aria-hidden="true" />
           <span className={styles.navLabel}>SuuSri</span>
         </div>
 
         <div
           className={`${styles.navItem} ${activeIndex === 3 ? styles.selected : ""}`}
           onClick={() => handleNavigation(3)}
+          role="button"
+          tabIndex={0}
+          aria-label="Blood Test"
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleNavigation(3); }}
         >
-          <TestTube className={styles.navIcon} />
+          <TestTube className={styles.navIcon} aria-hidden="true" />
           <span className={styles.navLabel}>Test</span>
         </div>
 
         <div
           className={`${styles.navItem} ${activeIndex === 4 ? styles.selected : ""}`}
           onClick={() => handleNavigation(4)}
+          role="button"
+          tabIndex={0}
+          aria-label="Medicine"
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleNavigation(4); }}
         >
-          <MedicalServices className={styles.navIcon} />
+          <MedicalServices className={styles.navIcon} aria-hidden="true" />
           <span className={styles.navLabel}>Medicine</span>
         </div>
       </div>

@@ -21,7 +21,7 @@ const ChatBot = () => {
         <Modal.Header closeButton className="modal-header-custom">
           {/* Remove the close button text */}
         </Modal.Header>
-        <Modal.Body className="modal-body-custom" style={{ padding: '0', height: '600px' }}>
+        <Modal.Body className="modal-body-custom" style={{ padding: '0', height: '80vh', maxHeight: '700px', minHeight: '400px' }}>
           <Chat />
         </Modal.Body>
       </Modal>
