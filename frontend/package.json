@@ -32,6 +32,7 @@
     "lucide-react": "^0.477.0",
     "mapbox-gl": "^3.9.3",
     "mongoose": "^8.9.0",
+    "pdfjs-dist": "^3.11.174",
     "qrcode.react": "^4.2.0",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.7",
@@ -45,13 +46,15 @@
     "react-select": "^5.10.1",
     "react-toastify": "^10.0.6",
     "react-tsparticles": "^2.12.2",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "tesseract.js": "^7.0.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "doctor": "npx react-doctor@latest"
   },
   "eslintConfig": {
     "extends": [
@@ -70,5 +73,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-doctor": "^0.2.10"
   }
 }

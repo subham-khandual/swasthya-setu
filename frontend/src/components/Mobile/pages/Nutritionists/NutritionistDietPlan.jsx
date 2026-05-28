@@ -140,6 +140,7 @@ const NutritionistDietPlan = () => {
   const [activityLevel, setActivityLevel] = useState("Moderate");
   const [mood, setMood] = useState("Good");
   const [bookedAppointments, setBookedAppointments] = useState([]); // Store booked appointments
+  const [isProgressPopupOpen, setIsProgressPopupOpen] = useState(false);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -281,7 +282,7 @@ const NutritionistDietPlan = () => {
   };
 
   const handleViewReport = () => {
-    toast.success("Viewing diet progress report...");
+    setIsProgressPopupOpen(true);
   };
 
   const handleActivityChange = (level) => {
@@ -476,23 +477,6 @@ const NutritionistDietPlan = () => {
         </div>
       </div>
 
-      {/* Nutrition Services */}
-      <div className={styles.globalActions}>
-        <h3 className={styles.globalTitle}>
-          <Leaf size={20} /> Nutrition Services
-        </h3>
-        <div className={styles.actionButtons}>
-          <button className={styles.consultButton} onClick={() => setIsBookingPopupOpen(true)}>
-            <Video size={16} /> Book Nutritionist
-          </button>
-          <button className={styles.groceryButton} onClick={handleGenerateGroceryList}>
-            <ShoppingCart size={16} /> Grocery List
-          </button>
-          <button className={styles.deliveryButton} onClick={handleMealDelivery}>
-            <Utensils size={16} /> Meal Delivery
-          </button>
-        </div>
-      </div>
 
       {/* Meal Details Popup */}
       {selectedMeal && (
@@ -647,6 +631,70 @@ const NutritionistDietPlan = () => {
                 Cancel
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Progress Report Popup */}
+      {isProgressPopupOpen && (
+        <div className={styles.popup}>
+          <div className={styles.popupContent} style={{ textAlign: "left", padding: "30px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px" }}>
+              <h3 style={{ margin: 0, color: "#2575fc", fontWeight: "700" }}><BarChart2 size={24} style={{ marginRight: "10px" }} /> Wellness Report</h3>
+              <button onClick={() => setIsProgressPopupOpen(false)} style={{ background: "transparent", border: "none", fontSize: "1.2rem", cursor: "pointer", color: "#a0aec0" }}>✖</button>
+            </div>
+            
+            <div style={{ marginBottom: "20px" }}>
+              <h4 style={{ fontSize: "1.1rem", color: "#4a5568", borderBottom: "2px solid #edf2f7", paddingBottom: "10px", marginBottom: "15px" }}>Daily Nutrition Goals</h4>
+              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
+                <span style={{ color: "#718096" }}>Calories Consumed:</span>
+                <span style={{ fontWeight: "bold", color: "#2d3748" }}>{totalCalories} / 2000 kcal</span>
+              </div>
+              <div style={{ width: "100%", background: "#edf2f7", borderRadius: "10px", height: "8px", marginBottom: "20px" }}>
+                <div style={{ width: `${Math.min((totalCalories / 2000) * 100, 100)}%`, background: "#48bb78", height: "100%", borderRadius: "10px" }}></div>
+              </div>
+              
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                <div style={{ background: "#ebf8ff", padding: "10px", borderRadius: "8px" }}>
+                  <p style={{ margin: 0, fontSize: "0.85rem", color: "#3182ce" }}>Protein</p>
+                  <p style={{ margin: 0, fontWeight: "bold", color: "#2b6cb0" }}>{totalNutrients.protein}g</p>
+                </div>
+                <div style={{ background: "#fff5f5", padding: "10px", borderRadius: "8px" }}>
+                  <p style={{ margin: 0, fontSize: "0.85rem", color: "#c53030" }}>Carbs</p>
+                  <p style={{ margin: 0, fontWeight: "bold", color: "#9b2c2c" }}>{totalNutrients.carbs}g</p>
+                </div>
+                <div style={{ background: "#fffff0", padding: "10px", borderRadius: "8px" }}>
+                  <p style={{ margin: 0, fontSize: "0.85rem", color: "#b7791f" }}>Fats</p>
+                  <p style={{ margin: 0, fontWeight: "bold", color: "#975a16" }}>{totalNutrients.fats}g</p>
+                </div>
+                <div style={{ background: "#f0fff4", padding: "10px", borderRadius: "8px" }}>
+                  <p style={{ margin: 0, fontSize: "0.85rem", color: "#2f855a" }}>Water</p>
+                  <p style={{ margin: 0, fontWeight: "bold", color: "#276749" }}>{waterIntake} glasses</p>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <h4 style={{ fontSize: "1.1rem", color: "#4a5568", borderBottom: "2px solid #edf2f7", paddingBottom: "10px", marginBottom: "15px" }}>Health Metrics</h4>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                <li style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: "1px solid #edf2f7" }}>
+                  <span style={{ color: "#718096" }}>BMI</span>
+                  <span style={{ fontWeight: "bold", color: healthData.bmi > 25 ? "#e53e3e" : "#38a169" }}>{healthData.bmi} ({healthData.bmi > 25 ? "Overweight" : "Normal"})</span>
+                </li>
+                <li style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", borderBottom: "1px solid #edf2f7" }}>
+                  <span style={{ color: "#718096" }}>Cholesterol</span>
+                  <span style={{ fontWeight: "bold", color: healthData.cholesterol > 200 ? "#e53e3e" : "#38a169" }}>{healthData.cholesterol} mg/dL</span>
+                </li>
+                <li style={{ display: "flex", justifyContent: "space-between", padding: "8px 0" }}>
+                  <span style={{ color: "#718096" }}>Blood Sugar</span>
+                  <span style={{ fontWeight: "bold", color: healthData.bloodSugar > 100 ? "#e53e3e" : "#38a169" }}>{healthData.bloodSugar} mg/dL</span>
+                </li>
+              </ul>
+            </div>
+            
+            <button className={styles.swapButton} onClick={() => setIsProgressPopupOpen(false)} style={{ width: "100%", marginTop: "20px" }}>
+              Close Report
+            </button>
           </div>
         </div>
       )}

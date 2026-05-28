@@ -5,7 +5,7 @@ import RoutesOfThePage from './components/routes';
 function App() {
   return (
     <>
-    <RoutesOfThePage />
+      <RoutesOfThePage />
     </>
   );
 }

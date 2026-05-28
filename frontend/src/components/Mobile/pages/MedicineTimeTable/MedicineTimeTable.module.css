@@ -1,0 +1,345 @@
+.container {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+  font-family: 'Inter', sans-serif;
+  padding-bottom: 80px;
+  max-width: 480px;
+  margin: 0 auto;
+  box-shadow: 0 0 20px rgba(0,0,0,0.05);
+  position: relative;
+}
+
+.header {
+  background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%);
+  background-image: radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.15) 0%, transparent 40%),
+                    linear-gradient(145deg, #0ba360 0%, #3cba92 100%);
+  padding: 30px 20px;
+  border-bottom-left-radius: 35px;
+  border-bottom-right-radius: 35px;
+  color: white;
+  box-shadow: 0 10px 25px rgba(11, 163, 96, 0.3), inset 0 -3px 10px rgba(0,0,0,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Adds a realistic glossy shine over the header */
+.header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 40%;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.2) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.headerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 5px 0 0;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.notificationBell {
+  position: relative;
+  background: rgba(255,255,255,0.2);
+  padding: 10px;
+  border-radius: 50%;
+}
+
+.badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #e74c3c;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 10px;
+  border: 2px solid #27ae60;
+}
+
+.analyticsCard {
+  background: white;
+  border-radius: 15px;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.statBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  border-right: 1px solid #eee;
+}
+.statBox:last-child {
+  border-right: none;
+}
+
+.statNumber {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.statLabel {
+  font-size: 0.75rem;
+  color: #7f8c8d;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.actionsContainer {
+  display: flex;
+  gap: 15px;
+  padding: 20px;
+  margin-top: 10px;
+}
+
+.actionBtn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 12px;
+  border: none;
+  background: #3498db;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(52, 152, 219, 0.3);
+}
+.scanBtn {
+  background: #9b59b6;
+  box-shadow: 0 4px 10px rgba(155, 89, 182, 0.3);
+}
+
+.timelineContainer {
+  padding: 0 20px;
+}
+
+.sectionTitle {
+  font-size: 1.1rem;
+  color: #2c3e50;
+  margin-bottom: 15px;
+  font-weight: 700;
+}
+
+.medCard {
+  display: flex;
+  align-items: center;
+  background: white;
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  border-left: 5px solid #bdc3c7;
+  transition: 0.3s;
+}
+
+.medCard.taken {
+  border-left-color: #2ecc71;
+  opacity: 0.7;
+}
+.medCard.pending {
+  border-left-color: #f1c40f;
+}
+.medCard.missed {
+  border-left-color: #e74c3c;
+}
+
+.medIcon {
+  background: #ebf5fb;
+  padding: 12px;
+  border-radius: 12px;
+  margin-right: 15px;
+}
+
+.medDetails {
+  flex: 1;
+}
+
+.medName {
+  margin: 0 0 4px 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+.medInfo {
+  margin: 0 0 5px 0;
+  font-size: 0.8rem;
+  color: #7f8c8d;
+}
+
+.medTime {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.85rem;
+  color: #e67e22;
+  font-weight: 600;
+}
+
+.medActions {
+  display: flex;
+  gap: 10px;
+}
+
+.checkBtn, .missBtn {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+}
+.checkBtn { background: #2ecc71; }
+.missBtn { background: #e74c3c; }
+
+.statusLabel {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #7f8c8d;
+}
+
+/* MODAL */
+.modalOverlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modalContent {
+  background: white;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.modalHeader h3 {
+  margin: 0;
+  color: #2c3e50;
+}
+.closeBtn {
+  background: none;
+  border: none;
+  color: #7f8c8d;
+  cursor: pointer;
+}
+
+.formGroup {
+  margin-bottom: 15px;
+}
+.formGroup label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #34495e;
+  margin-bottom: 5px;
+}
+.formGroup input, .formGroup select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+}
+.formGroup input:focus, .formGroup select:focus {
+  border-color: #3498db;
+}
+
+.saveBtn {
+  width: 100%;
+  padding: 15px;
+  background: #27ae60;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+/* MOBILE RESPONSIVE MEDIA QUERIES */
+@media screen and (max-width: 600px) {
+  .actionsContainer {
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+  }
+  
+  .header {
+    padding: 20px 15px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+  }
+  
+  .title {
+    font-size: 1.3rem;
+  }
+  
+  .statNumber {
+    font-size: 1.2rem;
+  }
+  
+  .statLabel {
+    font-size: 0.65rem;
+  }
+  
+  .medCard {
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    padding: 12px;
+  }
+  
+  .medActions {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+  }
+  
+  .medIcon {
+    margin-bottom: 10px;
+    padding: 8px;
+  }
+  
+  .medInfo {
+    font-size: 0.75rem;
+  }
+}

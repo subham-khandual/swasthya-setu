@@ -120,6 +120,11 @@ export const NotificationProvider = ({ children }) => {
         }
     };
 
+    const addNotification = (notif) => {
+        setNotifications(prev => [notif, ...prev]);
+        setUnreadCount(prev => prev + 1);
+    };
+
     return (
         <NotificationContext.Provider value={{ 
             notifications, 
@@ -128,7 +133,8 @@ export const NotificationProvider = ({ children }) => {
             fetchNotifications, 
             markAsRead, 
             markAllRead,
-            deleteNotification
+            deleteNotification,
+            addNotification
         }}>
             {children}
         </NotificationContext.Provider>

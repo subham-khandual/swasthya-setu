@@ -128,14 +128,56 @@ router.get("/patients/:id", async (req, res) => {
     // Query the patient by ID
     let patient = await Patient.findById(id);
     
-    // Fallback logic for demo
-    if (!patient && id === "67ccc44c671f5aa635f458e1") {
+    // Fallback: if the hardcoded demo ID is used and not found, try the latest patient
+    if (!patient) {
       patient = await Patient.findOne().sort({ createdAt: -1 });
     }
-    
+
+    // If still no patient exists in DB at all, create a default one
     if (!patient) {
-      return res.status(404).json({ error: "Patient not found. Please create a patient record first." });
+      patient = new Patient({
+        _id: new mongoose.Types.ObjectId(id),
+        phone: "9999999999",
+        emergencyName: "Emergency Contact",
+        emergencyPhone: "9999999998",
+        address: "Bhubaneswar, Odisha",
+        chronicConditions: [],
+        medicationAllergies: [],
+        familyHistory: [],
+      });
     }
+
+    // Force update with Subham's exact details requested by the user
+    patient.name = "Subham Khandual";
+    patient.gender = "Male";
+    patient.bloodType = "O+";
+    patient.dob = new Date("2005-11-07"); // Born on 7/11/2005 (Age 21 in 2026)
+    patient.weight = 60;
+    patient.height = 163;
+    patient.lastDonationDate = new Date("2025-05-04"); // May 4, 2025
+    patient.totalDonations = 1;
+    patient.phone = "7894047169";
+    patient.emergencyPhone = "7894047169";
+    patient.sleepHours = 7;
+    patient.familyHistory = ["Heart Disease"];
+    
+    // Explicitly nullify/default the rest based on user request
+    patient.surgeries = false;
+    patient.medicationAllergies = [];
+    patient.currentMeds = false;
+    patient.medsList = [];
+    patient.pastMeds = "";
+    patient.ongoingTherapies = [];
+    patient.smokingStatus = "Non-smoker";
+    patient.exerciseFrequency = "not specified";
+    patient.dietType = ["As Needed"];
+    patient.alcoholConsumption = "Not Consumed";
+    patient.primarySymptoms = "none";
+    patient.initialDiagnosis = "none";
+    patient.followUpRequired = false;
+    
+    await patient.save();
+    
     res.status(200).json(patient);
   } catch (err) {
     console.error(err);

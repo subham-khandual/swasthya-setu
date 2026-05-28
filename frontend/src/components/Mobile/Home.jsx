@@ -12,7 +12,6 @@ import {
   FileText,
   Apple,
   Clock,
-  Stethoscope,
   Ambulance,
   Building2,
   Syringe as Vial,
@@ -199,6 +198,7 @@ const Home = () => {
       </div>
 
       {/* Reordered SectionCard components as per the provided order */}
+
       <SectionCard
         icon={<Bot />}
         iconColor="#4A90E2"
@@ -206,6 +206,15 @@ const Home = () => {
         title="AI Chat Bot SUUSRI"
         subtitle="Get instant health assistance"
         onClick={() => navigateTo("/suusri")}
+      />
+
+      <SectionCard
+        icon={<Clock />}
+        iconColor="#8E44AD"
+        backgroundColor="#9B59B6"
+        title="Medicine Time Table"
+        subtitle="Smart schedule & reminders"
+        onClick={() => navigateTo("/medicine-timetable")}
       />
 
       <SectionCard

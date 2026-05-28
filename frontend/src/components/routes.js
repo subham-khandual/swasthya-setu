@@ -1,6 +1,7 @@
 import React from 'react';
 import { Navbar } from 'react-bootstrap';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import ProtectedRoute from './ProtectedRoute';
 const { Suspense, lazy } = React;
 
 const ChatBot = lazy(() => import('./Chat/Chatbot'));
@@ -52,6 +53,7 @@ const ManageMedicines = lazy(() => import('./AdminDashboard/ManageMedicines'));
 const Profile = lazy(() => import('./Mobile/pages/Profile/Profile'));
 const Notifications = lazy(() => import('./Mobile/pages/Notifications/Notifications'));
 const Welcome = lazy(() => import('./Mobile/Welcome'));
+const MedicineTimeTable = lazy(() => import('./Mobile/pages/MedicineTimeTable/MedicineTimeTable'));
 const PatientsData = lazy(() => import('./Patientdata/PatientsData'));
 const PatientProfile = lazy(() => import('./PatientProfile/PatientProfile'));
 const Doctorheader = lazy(() => import('./RegisterasDoctor/Doctorheader'));
@@ -71,6 +73,9 @@ const EHRManagement = lazy(() => import('./AdminDashboard/EHRManagement'));
 const MedicalHistory = lazy(() => import('./Mobile/pages/EHRData/MedicineHistory'));
 const PublicTracker = lazy(() => import('./Public/PublicTracker'));
 
+// Helper to wrap protected routes
+const P = ({ children }) => <ProtectedRoute>{children}</ProtectedRoute>;
+
 function RoutesOfThePage() {
     return (
         <Router>
@@ -83,104 +88,97 @@ function RoutesOfThePage() {
                     </div>
                 }>
                 <Routes>
-                    {/* Home and common header */}
+                    {/* Public routes - no login required */}
                     <Route path='/Landingpage' element={<><Header /><Dashboard /></>} />
                     <Route path='/' element={<><Header /><Authpage /></>} />
-
-                    {/* Auth routes */}
                     <Route path="/login-as-user" element={<><Header /><Login /></>} />
                     <Route path="/register-as-user" element={<><Header /><Register /></>} />
                     <Route path="/select-role" element={<><Header /><RoleSelection /></>} />
                     <Route path="/login-as-doctor" element={<><Header /><DoctorLogin /></>} />
                     <Route path="/register-as-doctor" element={<><Header /><DoctorRegister /></>} />
-                    <Route path="/admin-dashboard" element={<AdminDashboard />} />
                     <Route path="/login-as-admin" element={<><Header /><AdminLogin /></>} />
                     <Route path="/admin-auth-options" element={<><Header /><AdminAuthOptions /></>} />
                     <Route path="/register-as-admin" element={<><Header /><AdminRegister /></>} />
+                    <Route path='/Welcome' element={<><Welcome /></>} />
+                    <Route path='/track/:token' element={<PublicTracker />} />
 
-                    {/* User routes */}
-                    <Route path="/dashboard" element={<><Header /><Dashboard /></>} />
-                    <Route path="/blood-donation" element={<><BloodDonateReceive /><NavBar /></>} />
-                    <Route path="/blood-donation-check" element={<><Header /><FetchDonors />    </>} />
-
-                    <Route path="/accident-detection" element={<><Header /><AccidentDetection /></>} />
-                    <Route path='/blood-request-check' element={<><Header /><FetchRequest /></>} />
-
-                    {/* MAP */}
-                    <Route path="/map" element={<><Header /><MedicineStore /></>} />
+                    {/* Protected routes - login required */}
+                    <Route path="/admin-dashboard" element={<P><AdminDashboard /></P>} />
+                    <Route path="/dashboard" element={<P><><Header /><Dashboard /></></P>} />
+                    <Route path="/blood-donation" element={<P><><BloodDonateReceive /><NavBar /></></P>} />
+                    <Route path="/blood-donation-check" element={<P><><Header /><FetchDonors /></></P>} />
+                    <Route path="/accident-detection" element={<P><><Header /><AccidentDetection /></></P>} />
+                    <Route path='/blood-request-check' element={<P><><Header /><FetchRequest /></></P>} />
+                    <Route path="/map" element={<P><><Header /><MedicineStore /></></P>} />
 
                     {/* Doctor page routes */}
-                    <Route path='/blood-donations-dr-page' element={<><Doctorheader /><DrBloodDonation /></>} />
-                    <Route path='/blood-requests-dr-page' element={<><Doctorheader /><DrBloodrequests /></>} />
-                    <Route path='/accident-dr-page' element={<><Doctorheader /><Accidents /></>} />
+                    <Route path='/blood-donations-dr-page' element={<P><><Doctorheader /><DrBloodDonation /></></P>} />
+                    <Route path='/blood-requests-dr-page' element={<P><><Doctorheader /><DrBloodrequests /></></P>} />
+                    <Route path='/accident-dr-page' element={<P><><Doctorheader /><Accidents /></></P>} />
 
-                    {/* {Patient Data} */}
-                    <Route path='/PatientsData' element={<><Header /><PatientsData /></>} />
-                    <Route path='/Patient' element={<><Header /><PatientProfile patientId="67c35f1c8b405ef1defec414" /></>} />
-                    {/* Doctor page with its specific header */}
+                    {/* Patient Data */}
+                    <Route path='/PatientsData' element={<P><><Header /><PatientsData /></></P>} />
+                    <Route path='/Patient' element={<P><><Header /><PatientProfile patientId="67c35f1c8b405ef1defec414" /></></P>} />
                     <Route
                         path='/doctor-screen'
                         element={
-                            <>
-                                <Doctorheader /> {/* Render the DoctorHeader only for the doctor page */}
-                                <div className="container mt-4">
-                                    <Doctorpage />
-                                </div>
-                            </>
+                            <P>
+                                <>
+                                    <Doctorheader />
+                                    <div className="container mt-4">
+                                        <Doctorpage />
+                                    </div>
+                                </>
+                            </P>
                         }
                     />
+                    <Route path='/DoctorsData' element={<P><><Doctorheader /><DoctorsData /></></P>} />
+                    <Route path='/Doctor' element={<P><><Doctorheader /><PatientProfile patientId="67c35f1c8b405ef1defec414" /></></P>} />
 
-                    {/* {Patient Data} */}
-                    <Route path='/DoctorsData' element={<><Doctorheader /><DoctorsData /></>} />
-                    <Route path='/Doctor' element={<><Doctorheader /><PatientProfile patientId="67c35f1c8b405ef1defec414" /></>} />
+                    {/* Mobile Routes */}
+                    <Route path='/home' element={<P><><Home /><NavBar /></></P>} />
+                    <Route path='/medicine-timetable' element={<P><><MedicineTimeTable /><NavBar /></></P>} />
+                    <Route path='/profile' element={<P><><Profile /><NavBar /></></P>} />
+                    <Route path='/blood-donate-receive' element={<P><><BloodDonateReceive /><NavBar /></></P>} />
+                    <Route path='/accident-alert' element={<P><><AccidentAlert /><NavBar /></></P>} />
+                    <Route path='/blood-test' element={<P><><BloodTest /><NavBar /></></P>} />
+                    <Route path="/all-labs" element={<P><><AllLabs /><NavBar /></></P>} />
+                    <Route path='/medicine' element={<P><><Medicine /><Navbar /></></P>} />
+                    <Route path='/medicine-stores' element={<P><><AllMedicineStore /><NavBar /></></P>} />
+                    <Route path='/medicine-all' element={<P><><MedicineAll /><NavBar /></></P>} />
+                    <Route path='/medicine-history' element={<P><><MedicalHistory /><NavBar /></></P>} />
+                    <Route path='/medicines' element={<P><><Header /><MedicineStorePage /></></P>} />
+                    <Route path='/cart' element={<P><><Header /><CartPage /></></P>} />
+                    <Route path='/checkout' element={<P><><Header /><Checkout /></></P>} />
+                    <Route path='/order-confirmation/:id' element={<P><><Header /><OrderConfirmation /></></P>} />
+                    <Route path='/order-history' element={<P><><Header /><OrderHistory /></></P>} />
+                    <Route path='/admin/medicines' element={<P><><Header /><ManageMedicines /></></P>} />
+                    <Route path='/ehr-management' element={<P><><Header /><EHRManagement /></></P>} />
+                    <Route path="/doctors" element={<P><Doctors /></P>} />
+                    <Route path="/check-report" element={<P><><CheckReport /><NavBar /></></P>} />
+                    <Route path="/download-report" element={<P><><DownloadReport /><NavBar /></></P>} />
+                    <Route path="/follow-up" element={<P><><FollowUp /><NavBar /></></P>} />
+                    <Route path="/track-order" element={<P><><TrackOrder /></></P>} />
+                    <Route path="/nutrition" element={<P><><Nutrition /><NavBar /></></P>} />
+                    <Route path="/EHRHealthData" element={<P><><EHRHealthData patientId="67ccc44c671f5aa635f458e1" /><NavBar /></></P>} />
+                    <Route path='/ambulance' element={<P><><Ambulance /><NavBar /></></P>} />
+                    <Route path='/suusri' element={<P><><Chat /></></P>} />
+                    <Route path='/hospitals' element={<P><><HospitalDashboard /><NavBar /></></P>} />
+                    <Route path="/all-hospitals" element={<P><><AllHospitals /><NavBar /></></P>} />
+                    <Route
+                      path="/medical-records"
+                      element={<P><><EHRManagement /></></P>}
+                    />
+                    <Route path="/emergency-services" element={<P><><EmergencyServices /><NavBar /></></P>} />
+                    <Route path="/billing" element={<P><><Billing /><NavBar /></></P>} />
+                    <Route path="/appointment/:bookingId" element={<P><AppointmentDetails /></P>} />
+                    <Route path="/nutritionists" element={<P><><NutritionistDietPlan /><NavBar /></></P>} />
+                    <Route path="/nutritionist-appointments" element={<P><><NutritionistAppointments /><NavBar /></></P>} />
+                    <Route path='/vedio-calling' element={<P><VideoCall /></P>} />
+                    <Route path='/notifications' element={<P><Notifications /></P>} />
 
                     {/* 404 page */}
                     <Route path='*' element={<NotFound />} />
-
-                    {/* Mobile Routes */}
-                    <Route path='/Welcome' element={<><Welcome /></>} />
-                    <Route path='/home' element={<><Home /><NavBar /></>} />
-                    <Route path='/profile' element={<><Profile /><NavBar /></>} />
-                    <Route path='/blood-donate-receive' element={<><BloodDonateReceive /><NavBar /></>} />
-                    <Route path='/accident-alert' element={<><AccidentAlert /><NavBar /></>} />
-                    <Route path='/blood-test' element={<><BloodTest /><NavBar /></>} />
-                    <Route path="/all-labs" element={<><AllLabs /><NavBar /></>} />
-                    <Route path='/medicine' element={<><Medicine /><Navbar /></>} />
-                    <Route path='/medicine-stores' element={<><AllMedicineStore /><NavBar /></>} />
-                    <Route path='/medicine-all' element={<><MedicineAll /><NavBar /></>} />
-                    <Route path='/medicine-history' element={<><MedicalHistory /><NavBar /></>} />
-                    <Route path='/medicines' element={<><Header /><MedicineStorePage /></>} />
-                    <Route path='/cart' element={<><Header /><CartPage /></>} />
-                    <Route path='/checkout' element={<><Header /><Checkout /></>} />
-                    <Route path='/order-confirmation/:id' element={<><Header /><OrderConfirmation /></>} />
-                    <Route path='/order-history' element={<><Header /><OrderHistory /></>} />
-                    <Route path='/admin/medicines' element={<><Header /><ManageMedicines /></>} />
-                    <Route path='/ehr-management' element={<><Header /><EHRManagement /></>} />
-                    <Route path="/doctors" element={<Doctors />} />
-
-                    <Route path="/check-report" element={<><CheckReport /><NavBar /></>} />
-                    <Route path="/download-report" element={<><DownloadReport /><NavBar /></>} />
-                    <Route path="/follow-up" element={<><FollowUp /><NavBar /></>} />
-                    <Route path="/track-order" element={<><TrackOrder /></>} />
-                    <Route path="/nutrition" element={<><Nutrition /><NavBar /></>} />
-                    <Route path="/EHRHealthData" element={<><EHRHealthData patientId="67ccc44c671f5aa635f458e1" /><NavBar /></>} />
-                    <Route path='/ambulance' element={<><Ambulance /><NavBar /></>} />
-                    <Route path='/suusri' element={<><Chat /></>} />
-                    <Route path='/hospitals' element={<><HospitalDashboard /><NavBar /></>} />
-                    <Route path="/all-hospitals" element={<><AllHospitals /><NavBar /></>} />
-                    <Route
-                      path="/medical-records"
-                      element={<><EHRManagement /></>}
-                    />
-                    <Route path="/emergency-services" element={<><EmergencyServices /><NavBar /></>} />
-                    <Route path="/billing" element={<><Billing /><NavBar /></>} />
-                    <Route path="/appointment/:bookingId" element={<AppointmentDetails />} />
-                    <Route path="/nutritionists" element={<><NutritionistDietPlan /><NavBar /></>} />
-                    <Route path="/nutritionist-appointments" element={<><NutritionistAppointments /><NavBar /></>} />
-                    {/* devio call routes */}
-                    <Route path='/vedio-calling' element={<VideoCall />} />
-                    <Route path='/notifications' element={<Notifications />} />
-                    <Route path='/track/:token' element={<PublicTracker />} />
                 </Routes>
                 </Suspense>
             </div>

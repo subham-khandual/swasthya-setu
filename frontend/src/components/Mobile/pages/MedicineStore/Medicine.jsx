@@ -12,6 +12,26 @@ import { Pill, Search, MapPin, FileText, Clock, CreditCard, Truck, CheckCircle, 
 import styles from "../BloodTest/BloodTest.module.css"; // Reuse BloodTest.module.css for consistency
 import medicineStoreData from "../../../assets/Data/medicine_store_list.json"; // Import JSON data
 import { useCart } from "../../../../context/CartContext";
+import Tesseract from 'tesseract.js';
+import * as pdfjsLib from 'pdfjs-dist/build/pdf';
+
+// Set the PDF.js worker
+pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+
+// Helper: Convert first page of PDF to an image URL
+const pdfToImage = async (file) => {
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const page = await pdf.getPage(1);
+  const scale = 2;
+  const viewport = page.getViewport({ scale });
+  const canvas = document.createElement('canvas');
+  canvas.width = viewport.width;
+  canvas.height = viewport.height;
+  const ctx = canvas.getContext('2d');
+  await page.render({ canvasContext: ctx, viewport }).promise;
+  return canvas.toDataURL('image/png');
+};
 
 // Leaflet icon setup
 delete L.Icon.Default.prototype._getIconUrl;
@@ -271,43 +291,116 @@ const Medicine = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("prescription", selectedFile);
-
     setIsScanning(true);
     setScannedMedicines([]);
-    setScanStatus("Initializing Secure Connection...");
+    setScanStatus("Processing file...");
 
     try {
-      // Simulate multiple steps for a better UX
-      await new Promise(resolve => setTimeout(resolve, 800));
-      setScanStatus("Uploading Prescription...");
+      let imageSource;
+      const isPdf = selectedFile.type === "application/pdf" || selectedFile.name.toLowerCase().endsWith(".pdf");
+
+      if (isPdf) {
+        setScanStatus("Converting PDF to image...");
+        imageSource = await pdfToImage(selectedFile);
+      } else {
+        imageSource = URL.createObjectURL(selectedFile);
+      }
+
+      setScanStatus("Extracting text from prescription...");
       
-      const response = await axios.post(`${API_BASE_URL}/api/medicines/scan-prescription`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      // 1. Run local OCR using Tesseract to extract raw text
+      const { data: { text: extractedText } } = await Tesseract.recognize(imageSource, 'eng');
+      if (!isPdf) URL.revokeObjectURL(imageSource);
+      
+      if (!extractedText || extractedText.trim().length < 5) {
+        toast.error("Invalid file detected. Could not read any text.");
+        setIsPrescription(false);
+        setIsScanning(false);
+        return;
+      }
+
+      setScanStatus("Analyzing with Medical AI...");
+
+      // 2. Send the extracted text to Groq's super-fast TEXT model
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${process.env.REACT_APP_GROQ_API_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          model: "llama-3.3-70b-versatile",
+          messages: [
+            {
+              role: "system",
+              content: "You are an expert medical AI pharmacist. You analyze OCR text from prescriptions. You MUST identify the disease or diagnosis."
+            },
+            {
+              role: "user",
+              content: `Analyze this raw OCR text extracted from an uploaded document:\n\n"${extractedText}"\n\nSTEP 1: Is this a valid medical prescription (containing medicine names, doctor name, hospital name, or dosage instructions)?\nIf it is obviously NOT a prescription (random text, certificate, ID card, invoice, or irrelevant), reply with EXACTLY the word "INVALID" and nothing else.\n\nSTEP 2: If it IS a valid prescription, you MUST:\n- Identify the disease/diagnosis from the prescription. Look for words like "Diagnosis:", "Complaint:", "For:", or infer the disease from the medicines prescribed (e.g. Paracetamol + Azithromycin = Fever/Infection).\n- Extract every medicine with its dosage and timing.\n\nReturn a JSON object (NOT an array) with this exact format:\n{"disease": "the disease name", "medicines": [{"name": "medicine name", "dose": "dosage", "time": "08:00 AM", "type": "Morning"}]}\n\nThe "disease" field is MANDATORY. If not explicitly written, infer it from the medicines. Do not include any markdown. Just the raw JSON object.`
+            }
+          ],
+          temperature: 0.1
+        })
       });
 
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      setScanStatus("Performing AI OCR Analysis...");
+      const data = await response.json();
       
-      await new Promise(resolve => setTimeout(resolve, 1200));
-      setScanStatus("Extracting & Verifying Medicines...");
+      if (data.error) {
+          toast.error("AI API Error: " + data.error.message);
+          setIsScanning(false);
+          return;
+      }
 
-      await new Promise(resolve => setTimeout(resolve, 800));
+      let aiReply = data.choices[0].message.content.trim();
       
-      const verifiedMeds = response.data.extractedMedicines.map(med => ({
-        ...med,
-        MedicineId: med._id || med.MedicineId,
-        Name: med.name || med.Name,
-        Price: med.price || med.Price,
-        verified: true // Mark as verified by AI scan
-      }));
-
-      setScannedMedicines(verifiedMeds);
-      setExtractedDiagnosis(response.data.diagnosis || "Unknown");
-      setExtractedDosage(response.data.dosage || []);
-      setIsPrescription(response.data.is_prescription !== false);
-      toast.success("Scanning complete!");
+      if (aiReply.toUpperCase().includes("INVALID") || aiReply === "INVALID") {
+         toast.error("Invalid file detected. Please upload a valid medical prescription.");
+         setIsPrescription(false);
+      } else {
+         // Parse JSON and remove markdown if AI hallucinated it
+         aiReply = aiReply.replace(/```json/g, '').replace(/```/g, '').trim();
+         const parsed = JSON.parse(aiReply);
+         
+         // Support both old array format and new {disease, medicines} format
+         let medList = [];
+         let detectedDisease = "Unknown";
+         
+         if (Array.isArray(parsed)) {
+            medList = parsed;
+            detectedDisease = parsed[0]?.disease || "Unknown";
+         } else if (parsed.medicines && Array.isArray(parsed.medicines)) {
+            medList = parsed.medicines;
+            detectedDisease = parsed.disease || "Unknown";
+         }
+         
+         if (medList.length > 0) {
+            // Find matches in local store DB to get pricing
+            const allMedicines = stores.flatMap(store => store.Medicines);
+            
+            const verifiedMeds = medList.map(med => {
+              // Try to find the exact medicine in the local database
+              const matchedMed = allMedicines.find(m => m.Name.toLowerCase().includes(med.name.toLowerCase()));
+              return {
+                 MedicineId: matchedMed ? matchedMed.MedicineId : `MANUAL_${Date.now()}_${Math.random()}`,
+                 Name: med.name || "Unknown Med",
+                 Price: matchedMed ? matchedMed.Price : 50, // Default price if not in DB
+                 verified: true,
+                 dosage: med.dose || "N/A",
+                 time: med.time || ""
+              };
+            });
+            
+            setScannedMedicines(verifiedMeds);
+            setExtractedDosage(verifiedMeds.map(m => m.dosage));
+            setExtractedDiagnosis(detectedDisease);
+            setIsPrescription(true);
+            toast.success("Scanning complete!");
+         } else {
+            toast.error("Could not extract medicines. Please try a clearer picture.");
+            setIsPrescription(false);
+         }
+      }
     } catch (err) {
       console.error(err);
       toast.error("Failed to scan prescription. Please try again.");

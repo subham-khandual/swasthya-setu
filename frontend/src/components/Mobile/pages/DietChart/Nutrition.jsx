@@ -1,153 +1,139 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./Nutrition.module.css";
 import { 
-  Calendar, 
-  Utensils, 
-  Droplet, 
-  BarChart2, 
-  Video, 
-  ShoppingCart, 
-  Bell, 
-  AlertCircle, 
-  Clock, 
-  TestTube, 
-  Stethoscope, 
-  HeartPulse, 
-  Leaf 
+  Calendar, Utensils, Droplet, BarChart2,
+  AlertCircle, Clock, TestTube, Stethoscope, HeartPulse, 
+  Leaf, Activity, Loader
 } from "lucide-react";
 import nutritionImage from "../../../assets/Swasthyasetu/nutrition.jpg"; // Ensure this path is correct
 
+const GROQ_API_KEY = process.env.REACT_APP_GROQ_API_KEY;
+
 const Nutrition = () => {
-  // Define the structure of a meal for better type safety (optional, for TypeScript or clarity)
-  const initialDietPlan = [
-    {
-      id: 1,
-      meal: "Breakfast",
-      items: "Greek Yogurt",
-      calories: 350,
-      nutrients: { protein: 12, fats: 8, carbs: 60, vitaminD: 5 },
-      time: "08:00 AM",
-      restrictedFoods: ["Dairy", "Gluten"],
-      swapOptions: ["Oatmeal", "Gluten-Free Bread"],
-    },
-    {
-      id: 2,
-      meal: "Lunch",
-      items: "Grilled Chicken Salad, Quinoa",
-      calories: 450,
-      nutrients: { protein: 30, fats: 15, carbs: 40, vitaminD: 10 },
-      time: "12:00 PM",
-      restrictedFoods: ["Nuts", "Shellfish"],
-      swapOptions: ["Tofu Salad", "Brown Rice"],
-    },
-    {
-      id: 3,
-      meal: "Snacks",
-      items: "Carrots",
-      calories: 200,
-      nutrients: { protein: 5, fats: 10, carbs: 25, vitaminD: 2 },
-      time: "03:00 PM",
-      restrictedFoods: ["Peanuts", "Citrus"],
-      swapOptions: ["Apple", "Seeds"],
-    },
-    {
-      id: 4,
-      meal: "Dinner",
-      items: "Baked Salmon, Steamed Veggies",
-      calories: 400,
-      nutrients: { protein: 25, fats: 20, carbs: 30, vitaminD: 15 },
-      time: "07:00 PM",
-      restrictedFoods: ["Soy", "Eggs"],
-      swapOptions: ["Cod Fish", "Roasted Veggies"],
-    },
-  ];
+  const [formData, setFormData] = useState({
+    age: "",
+    gender: "Male",
+    weight: "",
+    height: "",
+    diseases: "",
+    goal: "Maintain Weight",
+    dietPreference: "Veg",
+    language: "English"
+  });
 
-  const [dietPlan, setDietPlan] = useState(initialDietPlan);
-  const [selectedMeal, setSelectedMeal] = useState(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [aiData, setAiData] = useState(null);
   const [waterIntake, setWaterIntake] = useState(0); // in glasses
+  const [selectedMeal, setSelectedMeal] = useState(null);
+  const [error, setError] = useState(null);
 
-  // Handlers
+  useEffect(() => {
+    const savedPlan = localStorage.getItem("aiDietPlan");
+    if (savedPlan) {
+      try {
+        setAiData(JSON.parse(savedPlan));
+      } catch(e) {}
+    }
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const generateDietPlan = async () => {
+    if (!formData.age || !formData.weight || !formData.height) {
+      setError("Please fill in Age, Weight, and Height.");
+      return;
+    }
+    setError(null);
+    setIsGenerating(true);
+
+    const systemMessage = `Act as an expert AI Nutritionist. 
+You will receive the user's data: Age, Gender, Weight(kg), Height(cm), Medical Conditions, Goals, Diet Preference, and Language.
+Calculate their BMI. Generate a strictly valid JSON response (no markdown, no extra text, just the raw JSON object) with this exact structure:
+{
+  "bmi": 24.5,
+  "dailyCalorieTarget": 2000,
+  "waterIntakeGlasses": 8,
+  "healthStatus": "Normal",
+  "lifestyleSuggestions": ["Sleep 8 hours", "Walk 30 mins"],
+  "diseaseAlerts": ["Avoid high sugar foods due to Diabetes"],
+  "dietPlan": [
+    {
+      "id": 1,
+      "meal": "Breakfast",
+      "time": "08:00 AM",
+      "items": "Oats with nuts",
+      "calories": 350,
+      "nutrients": { "protein": 12, "fats": 10, "carbs": 45, "vitaminD": 2 },
+      "restrictedFoods": ["Refined sugar"],
+      "swapOptions": ["Boiled Eggs"]
+    },
+    { "id": 2, "meal": "Lunch", "time": "01:00 PM", "items": "...", "calories": 500, "nutrients": {"protein": 20, "fats": 15, "carbs": 60, "vitaminD": 5}, "restrictedFoods": [], "swapOptions": [] },
+    { "id": 3, "meal": "Snacks", "time": "04:30 PM", "items": "...", "calories": 200, "nutrients": {"protein": 5, "fats": 5, "carbs": 20, "vitaminD": 0}, "restrictedFoods": [], "swapOptions": [] },
+    { "id": 4, "meal": "Dinner", "time": "08:00 PM", "items": "...", "calories": 450, "nutrients": {"protein": 25, "fats": 10, "carbs": 40, "vitaminD": 2}, "restrictedFoods": [], "swapOptions": [] }
+  ]
+}
+Ensure accurate nutritional data, proper calorie distribution based on the goal (Weight loss/gain/maintain), and strict adherence to medical restrictions (${formData.diseases}) and diet preference (${formData.dietPreference}). Language for output should be ${formData.language}.`;
+
+    const userPrompt = `Age: ${formData.age}, Gender: ${formData.gender}, Weight: ${formData.weight}kg, Height: ${formData.height}cm, Diseases: ${formData.diseases || "None"}, Goal: ${formData.goal}, Preference: ${formData.dietPreference}, Language: ${formData.language}`;
+
+    try {
+      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${GROQ_API_KEY}`
+        },
+        body: JSON.stringify({
+          model: "llama-3.3-70b-versatile",
+          messages: [
+            { role: "system", content: systemMessage },
+            { role: "user", content: userPrompt }
+          ],
+          temperature: 0.3,
+          response_format: { type: "json_object" }
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`API Error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const aiResponse = data.choices[0]?.message?.content;
+      const parsedData = JSON.parse(aiResponse);
+      
+      setAiData(parsedData);
+      localStorage.setItem("aiDietPlan", JSON.stringify(parsedData));
+      setWaterIntake(0); // Reset water tracking
+    } catch (err) {
+      console.error(err);
+      setError("Failed to generate diet plan. Please try again later.");
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   const handleMealClick = (meal) => {
     setSelectedMeal(meal);
   };
 
   const handleAddWater = () => {
-    setWaterIntake((prev) => prev + 1);
-    alert("Added 1 glass of water");
-  };
-
-  const handleBookConsultation = () => {
-    alert("Booking nutritionist consultation...");
-  };
-
-  const handleGenerateGroceryList = () => {
-    alert("Generated grocery list based on diet plan");
-  };
-
-  const handleMealDelivery = () => {
-    alert("Suggested nearby healthy meal delivery services");
-  };
-
-  const handleSwapMeal = (meal, newOption) => {
-    if (!meal || !newOption) {
-      alert("Error: Invalid meal or swap option selected.");
-      return;
+    if (aiData && waterIntake < aiData.waterIntakeGlasses) {
+        setWaterIntake((prev) => prev + 1);
     }
-    alert(`Swapped ${meal.meal} (${meal.items}) with ${newOption}`);
-    const updatedPlan = dietPlan.map((m) =>
-      m.id === meal.id ? { ...m, items: newOption } : m
-    );
-    setDietPlan(updatedPlan);
-  };
-
-  const handleViewReport = () => {
-    alert("Viewing diet progress report...");
   };
 
   const closePopup = () => {
     setSelectedMeal(null);
   };
 
-  // Calculations
-  const totalCalories = dietPlan.reduce((sum, meal) => sum + (meal.calories || 0), 0);
-  const totalNutrients = dietPlan.reduce(
-    (acc, meal) => ({
-      protein: acc.protein + (meal.nutrients.protein || 0),
-      fats: acc.fats + (meal.nutrients.fats || 0),
-      carbs: acc.carbs + (meal.nutrients.carbs || 0),
-      vitaminD: acc.vitaminD + (meal.nutrients.vitaminD || 0),
-    }),
-    { protein: 0, fats: 0, carbs: 0, vitaminD: 0 }
-  );
-
-  const checkNutrientAlert = () => {
-    if (totalNutrients.protein < 50) {
-      return "Low protein intake detected. Consider adding protein-rich foods like beans or eggs.";
-    } else if (totalNutrients.vitaminD < 15) {
-      return "Low Vitamin D intake detected. Include fortified foods or supplements.";
-    }
-    return null;
-  };
-
-  // Activity and Mood Trackers
-  const [activityLevel, setActivityLevel] = useState("Moderate");
-  const handleActivityChange = (level) => {
-    if (!level) return; // Prevent empty selection
-    setActivityLevel(level);
-    alert(`Activity level updated to ${level}`);
-  };
-
-  const [mood, setMood] = useState("Good");
-  const handleMoodChange = (newMood) => {
-    if (!newMood) return; // Prevent empty selection
-    setMood(newMood);
-    alert(`Mood updated to ${newMood}`);
-  };
-
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.greeting}>Today’s Diet Plan</h1>
+        <h1 className={styles.greeting}>AI Nutrition Plan</h1>
       </div>
 
       <div className={styles.imageSection}>
@@ -156,112 +142,113 @@ const Nutrition = () => {
           alt="Nutrition Banner"
           className={styles.nutritionImage}
           loading="lazy"
-          decoding="async"
-          onError={(e) => console.error("Failed to load nutrition image:", e)}
         />
       </div>
 
-      <div className={styles.labsSection}>
-        <h2 className={styles.sectionTitle}>
-          <Calendar size={20} /> Today’s Diet Plan
-        </h2>
-        <div className={styles.labsGrid}>
-          {dietPlan.map((meal) => (
-            <div
-              key={meal.id}
-              className={styles.labCard}
-              onClick={() => handleMealClick(meal)}
-              aria-label={`View details for ${meal.meal}`} // Accessibility
-            >
-              <div className={styles.iconContainer}>
-                <Utensils className={styles.purpleIcon} />
-              </div>
-              <div className={styles.mealHeader}>
-                <h3 className={styles.mealName}>{meal.meal}</h3>
-                <span className={styles.calories}>{meal.calories} kcal</span>
-              </div>
-              <p className={styles.schedule}>
-                <Clock size={16} /> {meal.time} - {meal.items}
-              </p>
-              <span className={styles.restricted}>
-                Avoid: {meal.restrictedFoods.join(", ")}
-              </span>
+      {/* AI Generator Form */}
+      <div className={styles.generatorSection}>
+        <h2 className={styles.sectionTitle}><Activity size={20} /> Personalize Your Diet</h2>
+        <div className={styles.formGrid}>
+          <input type="number" name="age" placeholder="Age" value={formData.age} onChange={handleInputChange} className={styles.inputField} />
+          <select name="gender" value={formData.gender} onChange={handleInputChange} className={styles.selectField}>
+            <option>Male</option><option>Female</option><option>Other</option>
+          </select>
+          <input type="number" name="weight" placeholder="Weight (kg)" value={formData.weight} onChange={handleInputChange} className={styles.inputField} />
+          <input type="number" name="height" placeholder="Height (cm)" value={formData.height} onChange={handleInputChange} className={styles.inputField} />
+          
+          <input type="text" name="diseases" placeholder="Diseases/Conditions (e.g. Diabetes, Anemia)" value={formData.diseases} onChange={handleInputChange} className={styles.inputFieldFull} />
+          
+          <select name="goal" value={formData.goal} onChange={handleInputChange} className={styles.selectField}>
+            <option>Weight Loss</option><option>Maintain Weight</option><option>Weight Gain</option>
+          </select>
+          <select name="dietPreference" value={formData.dietPreference} onChange={handleInputChange} className={styles.selectField}>
+            <option>Veg</option><option>Non-Veg</option><option>Vegan</option><option>Keto</option>
+          </select>
+          <select name="language" value={formData.language} onChange={handleInputChange} className={styles.selectFieldFull}>
+            <option>English</option><option>Hindi</option><option>Spanish</option>
+          </select>
+        </div>
+        {error && <p className={styles.errorMessage}>{error}</p>}
+        <button className={styles.generateBtn} onClick={generateDietPlan} disabled={isGenerating}>
+          {isGenerating ? <><Loader className={styles.spinIcon} size={18} /> Generating...</> : <><HeartPulse size={18} /> Generate Smart Diet Plan</>}
+        </button>
+      </div>
+
+      {aiData && (
+        <>
+          <div className={styles.labsSection} style={{marginTop: '20px'}}>
+            <h2 className={styles.sectionTitle}>
+              <Calendar size={20} /> Today’s AI Diet Plan
+            </h2>
+            <div className={styles.healthStatsBar}>
+              <span><strong>BMI:</strong> {aiData.bmi}</span>
+              <span><strong>Target:</strong> {aiData.dailyCalorieTarget} kcal</span>
+              <span className={styles.healthStatusLabel}>{aiData.healthStatus}</span>
             </div>
-          ))}
-        </div>
-      </div>
-
-      <div className={styles.trackingSection}>
-        <h3 className={styles.subTitle}>
-          <BarChart2 size={20} /> Diet & Wellness Tracking
-        </h3>
-        <div className={styles.trackingGrid}>
-          <div className={styles.trackingCard}>
-            <p>Total Calories: {totalCalories} kcal</p>
-            <p>Protein: {totalNutrients.protein}g, Fats: {totalNutrients.fats}g, Carbs: {totalNutrients.carbs}g, Vitamin D: {totalNutrients.vitaminD} IU</p>
-            {checkNutrientAlert() && (
-              <p className={styles.alert}>
-                <AlertCircle size={16} /> {checkNutrientAlert()}
-              </p>
+            
+            {aiData.diseaseAlerts && aiData.diseaseAlerts.length > 0 && (
+              <div className={styles.diseaseAlertsBox}>
+                <AlertCircle size={18} />
+                <ul>
+                  {aiData.diseaseAlerts.map((alert, idx) => <li key={idx}>{alert}</li>)}
+                </ul>
+              </div>
             )}
-          </div>
-          <div className={styles.trackingCard}>
-            <p>Water Intake: {waterIntake} glasses</p>
-            <button className={styles.waterButton} onClick={handleAddWater}>
-              <Droplet size={16} /> Add Water
-            </button>
-          </div>
-          <div className={styles.trackingCard}>
-            <p>Weight & BMI Progress</p>
-            <button className={styles.reportButton} onClick={handleViewReport}>
-              <BarChart2 size={16} /> View Progress
-            </button>
-          </div>
-          <div className={styles.trackingCard}>
-            <p>Activity Level: {activityLevel}</p>
-            <select
-              className={styles.activitySelect}
-              value={activityLevel}
-              onChange={(e) => handleActivityChange(e.target.value)}
-              aria-label="Select activity level"
-            >
-              <option value="Sedentary">Sedentary</option>
-              <option value="Moderate">Moderate</option>
-              <option value="Active">Active</option>
-            </select>
-          </div>
-          <div className={styles.trackingCard}>
-            <p>Mood Today: {mood}</p>
-            <select
-              className={styles.moodSelect}
-              value={mood}
-              onChange={(e) => handleMoodChange(e.target.value)}
-              aria-label="Select mood"
-            >
-              <option value="Good">Good</option>
-              <option value="Neutral">Neutral</option>
-              <option value="Poor">Poor</option>
-            </select>
-          </div>
-        </div>
-      </div>
 
-      <div className={styles.globalActions}>
-        <h3 className={styles.globalTitle}>
-          <Leaf size={20} /> Nutrition Services
-        </h3>
-        <div className={styles.actionButtons}>
-          <button className={styles.consultButton} onClick={handleBookConsultation}>
-            <Video size={16} /> Book Nutritionist
-          </button>
-          <button className={styles.groceryButton} onClick={handleGenerateGroceryList}>
-            <ShoppingCart size={16} /> Grocery List
-          </button>
-          <button className={styles.deliveryButton} onClick={handleMealDelivery}>
-            <Utensils size={16} /> Meal Delivery
-          </button>
-        </div>
-      </div>
+            <div className={styles.labsGrid}>
+              {aiData.dietPlan?.map((meal) => (
+                <div
+                  key={meal.id}
+                  className={styles.labCard}
+                  onClick={() => handleMealClick(meal)}
+                >
+                  <div className={styles.iconContainer}>
+                    <Utensils className={styles.purpleIcon} />
+                  </div>
+                  <div className={styles.mealHeader}>
+                    <h3 className={styles.mealName}>{meal.meal}</h3>
+                    <span className={styles.calories}>{meal.calories} kcal</span>
+                  </div>
+                  <p className={styles.schedule}>
+                    <Clock size={16} /> {meal.time} - {meal.items}
+                  </p>
+                  {meal.restrictedFoods && meal.restrictedFoods.length > 0 && (
+                    <span className={styles.restricted}>
+                      Avoid: {meal.restrictedFoods.join(", ")}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.trackingSection}>
+            <h3 className={styles.subTitle}>
+              <BarChart2 size={20} /> Wellness Tracking
+            </h3>
+            <div className={styles.trackingGrid}>
+              <div className={styles.trackingCard}>
+                <p><strong>Water Intake</strong></p>
+                <p>{waterIntake} / {aiData.waterIntakeGlasses} glasses</p>
+                <div className={styles.progressBar}>
+                  <div className={styles.progressFill} style={{ width: `${Math.min(100, (waterIntake/aiData.waterIntakeGlasses)*100)}%` }}></div>
+                </div>
+                <button className={styles.waterButton} onClick={handleAddWater}>
+                  <Droplet size={16} /> Add Water
+                </button>
+              </div>
+              <div className={styles.trackingCard}>
+                <p><strong>Lifestyle Suggestions</strong></p>
+                <ul className={styles.lifestyleList}>
+                  {aiData.lifestyleSuggestions?.map((sug, idx) => (
+                    <li key={idx}><Leaf size={12}/> {sug}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
 
       {selectedMeal && (
         <div className={styles.popup}>
@@ -274,63 +261,42 @@ const Nutrition = () => {
               <span>Calories</span> <span>{selectedMeal.calories} kcal</span>
             </p>
             <p className={styles.popupDetail}>
-              <span>Nutrients</span> <span>Protein: {selectedMeal.nutrients.protein}g, Fats: {selectedMeal.nutrients.fats}g, Carbs: {selectedMeal.nutrients.carbs}g, Vitamin D: {selectedMeal.nutrients.vitaminD || 0} IU</span>
+              <span>Nutrients</span> <span>P: {selectedMeal.nutrients?.protein}g | F: {selectedMeal.nutrients?.fats}g | C: {selectedMeal.nutrients?.carbs}g</span>
             </p>
             <p className={styles.popupDetail}>
               <span>Time</span> <span>{selectedMeal.time}</span>
             </p>
-            <p className={styles.popupDetail}>
-              <span>Restricted Foods</span> <span>{selectedMeal.restrictedFoods.join(", ")}</span>
-            </p>
-            <p className={styles.popupDetail}>
-              <span>Swap Options</span> <span>{selectedMeal.swapOptions.join(" or ")}</span>
-            </p>
+            {selectedMeal.restrictedFoods && selectedMeal.restrictedFoods.length > 0 && (
+              <p className={styles.popupDetail}>
+                <span>Restricted</span> <span>{selectedMeal.restrictedFoods.join(", ")}</span>
+              </p>
+            )}
+            {selectedMeal.swapOptions && selectedMeal.swapOptions.length > 0 && (
+              <p className={styles.popupDetail}>
+                <span>Swap Options</span> <span>{selectedMeal.swapOptions.join(" or ")}</span>
+              </p>
+            )}
             <div className={styles.popupButtons}>
-              <button className={styles.swapButton} onClick={() => handleSwapMeal(selectedMeal, selectedMeal.swapOptions[0])}>
-                <Leaf size={16} /> Swap Meal
-              </button>
-              <button className={styles.closeButton} onClick={closePopup}>
+              <button className={styles.closeButton} onClick={closePopup} style={{width: '100%'}}>
                 Close
               </button>
             </div>
-            <p className={styles.reminder}>
-              <Bell size={16} /> Reminder: Eat at {selectedMeal.time}. Drink water!
-            </p>
           </div>
         </div>
       )}
 
       <nav className={styles.navbar}>
-        <a 
-          className={`${styles.navLink} ${window.location.pathname === "/blood-test" ? styles.active : ""}`} 
-          href="/blood-test"
-          aria-label="Navigate to Blood Test"
-        >
-          <TestTube className={styles.navIcon} />
-          Test
+        <a className={`${styles.navLink} ${window.location.pathname === "/blood-test" ? styles.active : ""}`} href="/blood-test">
+          <TestTube className={styles.navIcon} /> Test
         </a>
-        <button 
-          className={styles.suusriButton} 
-          onClick={() => alert("Suusri clicked!")}
-          aria-label="Suusri button"
-        >
+        <button className={styles.suusriButton} onClick={() => window.location.href = "/suusri"}>
           Suusri
         </button>
-        <a 
-          className={`${styles.navLink} ${window.location.pathname === "/doctors" ? styles.active : ""}`} 
-          href="/doctors"
-          aria-label="Navigate to Doctors"
-        >
-          <Stethoscope className={styles.navIcon} />
-          Doctor
+        <a className={`${styles.navLink} ${window.location.pathname === "/doctors" ? styles.active : ""}`} href="/doctors">
+          <Stethoscope className={styles.navIcon} /> Doctor
         </a>
-        <a 
-          className={`${styles.navLink} ${window.location.pathname === "/nutrition" ? styles.active : ""}`} 
-          href="/nutrition"
-          aria-label="Navigate to Nutrition"
-        >
-          <Utensils className={styles.navIcon} />
-          Nutrition
+        <a className={`${styles.navLink} ${window.location.pathname === "/nutrition" ? styles.active : ""}`} href="/nutrition">
+          <Utensils className={styles.navIcon} /> Nutrition
         </a>
       </nav>
     </div>
