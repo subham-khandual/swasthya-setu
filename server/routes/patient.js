@@ -157,6 +157,7 @@ router.get("/patients/:id", async (req, res) => {
     patient.lastDonationDate = new Date("2025-05-04"); // May 4, 2025
     patient.totalDonations = 1;
     patient.phone = "7894047169";
+    patient.emergencyName = patient.emergencyName || "Emergency Contact";
     patient.emergencyPhone = "7894047169";
     patient.sleepHours = 7;
     patient.familyHistory = ["Heart Disease"];
@@ -181,7 +182,7 @@ router.get("/patients/:id", async (req, res) => {
     res.status(200).json(patient);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: "Server error", details: err.message });
   }
 });
 
