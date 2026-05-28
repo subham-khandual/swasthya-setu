@@ -36,6 +36,7 @@ build
 # Antigravity Cleanup
 .env
 *.env
+!.env.production
 node_modules/
 **/node_modules/
 frontend/node_modules/
