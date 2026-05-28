@@ -60,12 +60,13 @@ export function AuthProvider({ children }) {
         login,
         logout,
         resetPassword,
-        googleSignIn
+        googleSignIn,
+        loading
     };
 
     return (
         <AuthContext.Provider value={value}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     );
 }

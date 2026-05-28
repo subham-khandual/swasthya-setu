@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
-import { getAnalytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -15,9 +14,21 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+let analytics = null;
+if (typeof window !== "undefined") {
+  const initAnalytics = () => {
+    import("firebase/analytics").then(({ getAnalytics }) => {
+      analytics = getAnalytics(app);
+    }).catch((err) => console.error("Failed to load Firebase Analytics", err));
+  };
+  
+  if (window.requestIdleCallback) {
+    window.requestIdleCallback(initAnalytics);
+  } else {
+    setTimeout(initAnalytics, 3000);
+  }
+}
 
-// Initialize Firebase Auth and providers
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 

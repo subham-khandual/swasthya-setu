@@ -1,6 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import adminLoginImg from '../../assets/admin-login-main.png';
+import adminLoginImg from '../../assets/admin-login-main.jpg';
+import userRegisterImg from '../../assets/user_register.jpg';
+import doctorRegisterImg from '../../assets/doctor_register.jpg';
 
 function Authpage() {
   return (
@@ -11,11 +13,13 @@ function Authpage() {
           <div className="card border-0 shadow-lg h-100" style={{ height: '100%', width: '100%' }}>
             <div className="card-img-top overflow-hidden rounded-top" style={{ height: '200px' }}>
               <img
-                src="https://th.bing.com/th/id/OIP.WNQzMWB6nZi_uYlSNxL5SQHaE8?rs=1&pid=ImgDetMain"
+                src={userRegisterImg}
                 className="img-fluid h-100 w-100 object-fit-cover"
                 alt="User Registration"
                 fetchpriority="high"
                 decoding="async"
+                width="400"
+                height="200"
               />
             </div>
             <div className="card-body d-flex flex-column justify-content-center align-items-center">
@@ -35,11 +39,13 @@ function Authpage() {
           <div className="card border-0 shadow-lg h-100" style={{ height: '100%', width: '100%' }}>
             <div className="card-img-top overflow-hidden rounded-top" style={{ height: '200px' }}>
               <img
-                src="https://static.vecteezy.com/system/resources/previews/002/952/463/large_2x/doctor-holding-touching-hands-asian-senior-or-elderly-old-lady-woman-patient-with-love-care-helping-encourage-and-empathy-at-nursing-hospital-ward-healthy-strong-medical-concept-free-photo.jpg"
+                src={doctorRegisterImg}
                 className="img-fluid h-100 w-100 object-fit-cover"
                 alt="Doctor Registration"
                 loading="lazy"
                 decoding="async"
+                width="400"
+                height="200"
               />
             </div>
             <div className="card-body d-flex flex-column justify-content-center align-items-center">
@@ -64,6 +70,8 @@ function Authpage() {
                 alt="Admin Login"
                 loading="lazy"
                 decoding="async"
+                width="400"
+                height="200"
               />
             </div>
             <div className="card-body d-flex flex-column justify-content-center align-items-center">

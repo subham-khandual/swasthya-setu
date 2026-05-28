@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import adminLoginImg from '../../assets/admin-login-main.png';
+import adminLoginImg from '../../assets/admin-login-main.jpg';
 
 function AdminAuthOptions() {
     return (

@@ -27,7 +27,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { QRCodeCanvas } from 'qrcode.react';
 import logo from '../assets/SwasthyaSetuLogo.png';
 import styles from './AdminDashboard.module.css';
-import adminImage from '../../assets/admin-login-main.png';
+import adminImage from '../../assets/admin-login-main.jpg';
 import AmbulanceTracker from './AmbulanceTracker';
 
 // Mock data for new sections

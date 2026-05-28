@@ -1,5 +1,4 @@
 import React from 'react';
-import { Navbar } from 'react-bootstrap';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import ProtectedRoute from './ProtectedRoute';
 const { Suspense, lazy } = React;
@@ -62,10 +61,10 @@ const DoctorRegister = lazy(() => import('./RegisterasDoctor/DoctorRegister'));
 const Login = lazy(() => import('./RegisterasUser/Login'));
 const Register = lazy(() => import('./RegisterasUser/Register'));
 const RoleSelection = lazy(() => import('./RegisterasUser/RoleSelection'));
-const Authpage = lazy(() => import('./Screens/Authpage'));
 const Dashboard = lazy(() => import('./Screens/Dashboard'));
 const Doctorpage = lazy(() => import('./Screens/Doctorpage'));
-const Header = lazy(() => import('./Screens/Header'));
+import Header from './Screens/Header';
+import Authpage from './Screens/Authpage';
 const AppointmentDetails = lazy(() => import('./Mobile/pages/Hospitals/AppointmentDetails'));
 const NutritionistDietPlan = lazy(() => import('./Mobile/pages/Nutritionists/NutritionistDietPlan'));
 const NutritionistAppointments = lazy(() => import('./Mobile/pages/Nutritionists/NutritionistAppointments'));
@@ -143,7 +142,7 @@ function RoutesOfThePage() {
                     <Route path='/accident-alert' element={<P><><AccidentAlert /><NavBar /></></P>} />
                     <Route path='/blood-test' element={<P><><BloodTest /><NavBar /></></P>} />
                     <Route path="/all-labs" element={<P><><AllLabs /><NavBar /></></P>} />
-                    <Route path='/medicine' element={<P><><Medicine /><Navbar /></></P>} />
+                    <Route path='/medicine' element={<P><><Medicine /><NavBar /></></P>} />
                     <Route path='/medicine-stores' element={<P><><AllMedicineStore /><NavBar /></></P>} />
                     <Route path='/medicine-all' element={<P><><MedicineAll /><NavBar /></></P>} />
                     <Route path='/medicine-history' element={<P><><MedicalHistory /><NavBar /></></P>} />
