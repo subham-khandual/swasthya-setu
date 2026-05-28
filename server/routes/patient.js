@@ -128,56 +128,41 @@ router.get("/patients/:id", async (req, res) => {
     // Query the patient by ID
     let patient = await Patient.findById(id);
     
-    // Fallback: if the hardcoded demo ID is used and not found, try the latest patient
-    if (!patient) {
-      patient = await Patient.findOne().sort({ createdAt: -1 });
-    }
-
-    // If still no patient exists in DB at all, create a default one
+    // If no patient exists, create a default one for the demo
     if (!patient) {
       patient = new Patient({
         _id: new mongoose.Types.ObjectId(id),
-        phone: "9999999999",
+        name: "Subham Khandual",
+        gender: "Male",
+        bloodType: "O+",
+        dob: new Date("2005-11-07"),
+        weight: 60,
+        height: 163,
+        lastDonationDate: new Date("2025-05-04"),
+        totalDonations: 1,
+        phone: "7894047169",
         emergencyName: "Emergency Contact",
-        emergencyPhone: "9999999998",
+        emergencyPhone: "7894047169",
         address: "Bhubaneswar, Odisha",
-        chronicConditions: [],
+        sleepHours: 7,
+        familyHistory: ["Heart Disease"],
+        surgeries: false,
         medicationAllergies: [],
-        familyHistory: [],
+        currentMeds: false,
+        medsList: [],
+        pastMeds: "",
+        ongoingTherapies: [],
+        smokingStatus: "Non-smoker",
+        exerciseFrequency: "not specified",
+        dietType: ["As Needed"],
+        alcoholConsumption: "Not Consumed",
+        primarySymptoms: "none",
+        initialDiagnosis: "none",
+        followUpRequired: false,
+        chronicConditions: []
       });
+      await patient.save();
     }
-
-    // Force update with Subham's exact details requested by the user
-    patient.name = "Subham Khandual";
-    patient.gender = "Male";
-    patient.bloodType = "O+";
-    patient.dob = new Date("2005-11-07"); // Born on 7/11/2005 (Age 21 in 2026)
-    patient.weight = 60;
-    patient.height = 163;
-    patient.lastDonationDate = new Date("2025-05-04"); // May 4, 2025
-    patient.totalDonations = 1;
-    patient.phone = "7894047169";
-    patient.emergencyName = patient.emergencyName || "Emergency Contact";
-    patient.emergencyPhone = "7894047169";
-    patient.sleepHours = 7;
-    patient.familyHistory = ["Heart Disease"];
-    
-    // Explicitly nullify/default the rest based on user request
-    patient.surgeries = false;
-    patient.medicationAllergies = [];
-    patient.currentMeds = false;
-    patient.medsList = [];
-    patient.pastMeds = "";
-    patient.ongoingTherapies = [];
-    patient.smokingStatus = "Non-smoker";
-    patient.exerciseFrequency = "not specified";
-    patient.dietType = ["As Needed"];
-    patient.alcoholConsumption = "Not Consumed";
-    patient.primarySymptoms = "none";
-    patient.initialDiagnosis = "none";
-    patient.followUpRequired = false;
-    
-    await patient.save();
     
     res.status(200).json(patient);
   } catch (err) {
