@@ -20,6 +20,8 @@ const specialties = [
   { id: "Orthopedist", img: orthoImg },
   { id: "Gynecologist", img: gyneImg },
   { id: "Dermatologist", img: genPhysicianImg }, // Fallback
+  { id: "ENT Specialist", img: genPhysicianImg },
+  { id: "Nutritionist/Dietitian", img: genPhysicianImg },
 ];
 
 const VideoConsultation = () => {

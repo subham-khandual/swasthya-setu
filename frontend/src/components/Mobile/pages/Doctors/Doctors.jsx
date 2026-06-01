@@ -79,7 +79,9 @@ const Doctors = () => {
     { id: 5, name: "Dr. M Das", specialty: "Pediatrician", experience: "7 years", hospital: "Care Hospital", address: "Chandrasekharpur", rating: 4.6, availableNow: true, lat: 20.324, lng: 85.817, fee: "$45" },
     { id: 6, name: "Dr. N Sahoo", specialty: "General Physician", experience: "20 years", hospital: "SUM Hospital", address: "Kalinga Nagar", rating: 4.9, availableNow: true, lat: 20.260, lng: 85.839, fee: "$30" },
     { id: 7, name: "Dr. B Swain", specialty: "Psychiatrist", experience: "13 years", hospital: "Mental Health Institute", address: "Bhubaneswar", rating: 4.9, availableNow: true, lat: 20.334, lng: 85.810, fee: "$70" },
-    { id: 8, name: "Dr. S Mohanty", specialty: "Gynecologist", experience: "11 years", hospital: "Capital Hospital", address: "Unit 6", rating: 4.8, availableNow: true, lat: 20.276, lng: 85.839, fee: "$65" }
+    { id: 8, name: "Dr. S Mohanty", specialty: "Gynecologist", experience: "11 years", hospital: "Capital Hospital", address: "Unit 6", rating: 4.8, availableNow: true, lat: 20.276, lng: 85.839, fee: "$65" },
+    { id: 9, name: "Dr. K Pati", specialty: "ENT Specialist", experience: "10 years", hospital: "AMRI Hospital", address: "Khandagiri", rating: 4.7, availableNow: true, lat: 20.272, lng: 85.801, fee: "$55" },
+    { id: 10, name: "Dr. R Das", specialty: "Nutritionist/Dietitian", experience: "5 years", hospital: "Wellness Clinic", address: "Jayadev Vihar", rating: 4.8, availableNow: true, lat: 20.301, lng: 85.819, fee: "$35" }
   ];
 
   const [doctors, setDoctors] = useState(mockDoctors);
@@ -121,6 +123,8 @@ const Doctors = () => {
     { value: "Gynecologist", label: "Gynecologist" },
     { value: "Dermatologist", label: "Dermatologist" },
     { value: "Psychiatrist", label: "Mental Health Specialist / Psychiatrist" },
+    { value: "ENT Specialist", label: "ENT Specialist" },
+    { value: "Nutritionist/Dietitian", label: "Nutritionist/Dietitian" },
   ];
 
   const timeSlots = [
@@ -214,7 +218,7 @@ const Doctors = () => {
           model: "llama-3.3-70b-versatile",
           messages: [{ 
             role: "system", 
-            content: "You are a medical triage AI. The user will provide symptoms. You must return exactly ONE of these specialties that best fits the symptoms: 'General Physician', 'Pediatrician', 'Cardiologist', 'Neurologist', 'Orthopedist', 'Gynecologist', 'Dermatologist', 'Psychiatrist'. Do not add any extra text or punctuation."
+            content: "You are a medical triage AI. The user will provide symptoms. You must return exactly ONE of these specialties that best fits the symptoms: 'General Physician', 'Pediatrician', 'Cardiologist', 'Neurologist', 'Orthopedist', 'Gynecologist', 'Dermatologist', 'Psychiatrist', 'ENT Specialist', 'Nutritionist/Dietitian'. Do not add any extra text or punctuation."
           }, { role: "user", content: symptomsInput }],
           temperature: 0.1
         })
@@ -333,6 +337,8 @@ const Doctors = () => {
       case "Pediatrician": return ["Paracetamol Syrup 5ml (if fever > 100°F)", "ORS Liquid - Drink frequently", "Keep the child hydrated", "Sponge bath for high temperature"];
       case "Gynecologist": return ["Folic Acid 5mg (1-0-0) daily", "Iron Supplement (0-1-0) after lunch", "Drink 3-4 liters of water daily", "Routine ultrasound recommended"];
       case "Psychiatrist": return ["Escitalopram 10mg (1-0-0) after breakfast", "Maintain a daily mood journal", "Engage in 20 mins of mindfulness meditation", "Follow up session in 14 days"];
+      case "ENT Specialist": return ["Amoxicillin 500mg (1-0-1) for 5 days", "Saline Nasal Spray as needed", "Warm salt water gargle twice daily", "Avoid cold drinks and dust"];
+      case "Nutritionist/Dietitian": return ["High protein diet with fiber", "Drink 3 liters of water daily", "Avoid processed sugars", "Include leafy greens in meals"];
       case "General Physician":
       default: return ["Paracetamol 500mg (1-0-1) for 3 days", "Azithromycin 500mg (1-0-0) for 3 days", "Drink plenty of warm water and rest.", "Avoid cold foods and beverages"];
     }
