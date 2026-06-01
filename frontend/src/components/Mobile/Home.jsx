@@ -18,6 +18,7 @@ import {
   Store,
   Utensils,
   MessageCircle as Bot,
+  Stethoscope,
 } from "lucide-react";
 import doctor1 from "../assets/demodoctor/doctor1.jpg";
 import doctor2 from "../assets/demodoctor/doctor2.jpg";
@@ -206,6 +207,15 @@ const Home = () => {
         title="AI Chat Bot SUUSRI"
         subtitle="Get instant health assistance"
         onClick={() => navigateTo("/suusri")}
+      />
+
+      <SectionCard
+        icon={<Stethoscope />}
+        iconColor="#D81B60"
+        backgroundColor="#FF4B72"
+        title="Doctor Consult"
+        subtitle="Online Consultation"
+        onClick={() => navigateTo("/doctors")}
       />
 
       <SectionCard

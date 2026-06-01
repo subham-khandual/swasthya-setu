@@ -78,7 +78,8 @@ const Doctors = () => {
     { id: 4, name: "Dr. S Jena", specialty: "Orthopedist", experience: "12 years", hospital: "Sparsh Hospital", address: "Saheed Nagar", rating: 4.7, availableNow: false, nextSlot: "Tomorrow, 2 PM", lat: 20.291, lng: 85.845, fee: "$60" },
     { id: 5, name: "Dr. M Das", specialty: "Pediatrician", experience: "7 years", hospital: "Care Hospital", address: "Chandrasekharpur", rating: 4.6, availableNow: true, lat: 20.324, lng: 85.817, fee: "$45" },
     { id: 6, name: "Dr. N Sahoo", specialty: "General Physician", experience: "20 years", hospital: "SUM Hospital", address: "Kalinga Nagar", rating: 4.9, availableNow: true, lat: 20.260, lng: 85.839, fee: "$30" },
-    { id: 7, name: "Dr. B Swain", specialty: "Psychiatrist", experience: "13 years", hospital: "Mental Health Institute", address: "Bhubaneswar", rating: 4.9, availableNow: true, lat: 20.334, lng: 85.810, fee: "$70" }
+    { id: 7, name: "Dr. B Swain", specialty: "Psychiatrist", experience: "13 years", hospital: "Mental Health Institute", address: "Bhubaneswar", rating: 4.9, availableNow: true, lat: 20.334, lng: 85.810, fee: "$70" },
+    { id: 8, name: "Dr. S Mohanty", specialty: "Gynecologist", experience: "11 years", hospital: "Capital Hospital", address: "Unit 6", rating: 4.8, availableNow: true, lat: 20.276, lng: 85.839, fee: "$65" }
   ];
 
   const [doctors, setDoctors] = useState(mockDoctors);
