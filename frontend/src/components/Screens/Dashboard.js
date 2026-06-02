@@ -149,7 +149,7 @@ function Dashboard() {
                     height="225"
                     className={styles.cardImage} 
                     style={{
-                      ...(item.title === 'Profile' ? { objectPosition: 'top' } : {}),
+                      ...(item.title === 'Profile' ? { objectPosition: 'center' } : {}),
                       ...(item.title === 'Welcome' ? { objectFit: 'contain' } : {})
                     }}
                   />

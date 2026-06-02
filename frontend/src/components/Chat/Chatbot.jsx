@@ -22,7 +22,7 @@ const ChatBot = () => {
           {/* Remove the close button text */}
         </Modal.Header>
         <Modal.Body className="modal-body-custom" style={{ padding: '0', height: '80vh', maxHeight: '700px', minHeight: '400px' }}>
-          <Chat />
+          <Chat isFloating={true} />
         </Modal.Body>
       </Modal>
     </>

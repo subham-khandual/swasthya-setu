@@ -8,7 +8,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import { Pill, Search, MapPin, FileText, Clock, CreditCard, Truck, CheckCircle, AlertCircle, ChevronRight, Star, Droplet, TestTube, Stethoscope, HeartPulse, Upload } from "lucide-react";
+import { Pill, Search, MapPin, FileText, Clock, CreditCard, Truck, CheckCircle, AlertCircle, ChevronRight, Star, Upload } from "lucide-react";
 import styles from "../BloodTest/BloodTest.module.css"; // Reuse BloodTest.module.css for consistency
 import medicineStoreData from "../../../assets/Data/medicine_store_list.json"; // Import JSON data
 import { useCart } from "../../../../context/CartContext";
@@ -396,10 +396,59 @@ const Medicine = () => {
             setExtractedDiagnosis(detectedDisease);
             setIsPrescription(true);
             toast.success("Scanning complete!");
-         } else {
+
+            // Save scanned prescription to localStorage for Medical History view
+            try {
+              const savedPrescriptions = localStorage.getItem("scannedPrescriptions");
+              let prescriptionsList = [];
+              if (savedPrescriptions) {
+                const parsed = JSON.parse(savedPrescriptions);
+                if (Array.isArray(parsed)) {
+                  prescriptionsList = parsed;
+                }
+              }
+
+              const storedUser = localStorage.getItem("user");
+              let patientName = "Subham Khandual";
+              if (storedUser) {
+                const parsedUser = JSON.parse(storedUser);
+                if (parsedUser.name) {
+                  patientName = parsedUser.name;
+                }
+              }
+
+              const newRecord = {
+                id: `SCAN_${Date.now()}`,
+                patientName: patientName,
+                ageGender: "28 / Male",
+                date: new Date().toISOString().split("T")[0],
+                doctor: "AI Secure Scan (Self Uploaded)",
+                diagnosis: detectedDisease || "General Consultation",
+                summary: `This prescription was securely scanned, verified, and digitized via Swasthya Setu AI.`,
+                detailedMedicines: verifiedMeds.map(med => ({
+                  name: med.Name,
+                  dosage: med.dosage || "1 tablet",
+                  frequency: med.time || "Once a day",
+                  duration: "As prescribed"
+                })),
+                status: "Completed"
+              };
+
+              prescriptionsList.unshift(newRecord);
+              localStorage.setItem("scannedPrescriptions", JSON.stringify(prescriptionsList));
+              
+              // Automatically redirect to Medical History page after 1.5 seconds so user can see toast
+              setTimeout(() => {
+                setIsUploadModalOpen(false);
+                navigate("/medicine-history");
+              }, 1500);
+            } catch (e) {
+              console.error("Failed to save prescription to history:", e);
+            }
+          } else {
             toast.error("Could not extract medicines. Please try a clearer picture.");
             setIsPrescription(false);
-         }
+          }
       }
     } catch (err) {
       console.error(err);
@@ -874,30 +923,7 @@ const Medicine = () => {
         </div>
       )}
 
-      {/* Bottom Navigation Bar */}
-      <nav className="navbar fixed-bottom navbar-light bg-light" style={{ boxShadow: "0 -2px 6px rgba(0, 0, 0, 0.1)", maxWidth: "480px", margin: "0 auto", width: "100%" }}>
-        <div className="container-fluid justify-content-around">
-          <a className="nav-link text-muted d-flex flex-column align-items-center" href="/blood-donate-receive">
-            <Droplet size={24} />
-            <span className="small">Donate</span>
-          </a>
-          <a className="nav-link text-muted d-flex flex-column align-items-center" href="/blood-test">
-            <TestTube size={24} />
-            <span className="small">Test</span>
-          </a>
-          <a className="nav-link text-purple d-flex flex-column align-items-center" href="/suusri" style={{ background: "#9b59b6", borderRadius: "50%", width: "50px", height: "50px", display: "flex", justifyContent: "center", alignItems: "center", color: "#fff", margin: "-10px 0" }}>
-            Suusri
-          </a>
-          <a className="nav-link text-muted d-flex flex-column align-items-center" href="/doctors">
-            <Stethoscope size={24} />
-            <span className="small">Doctor</span>
-          </a>
-          <a className="nav-link text-muted d-flex flex-column align-items-center" href="/medicine">
-            <HeartPulse size={24} />
-            <span className="small">Medicine</span>
-          </a>
-        </div>
-      </nav>
+
 
       <ToastContainer />
     </div>

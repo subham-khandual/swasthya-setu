@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FileText, ChevronRight, AlertCircle } from "lucide-react";
 import { toast } from "react-toastify";
@@ -31,6 +31,24 @@ const mockEHR = [
 
 const MedicalHistory = () => {
   const navigate = useNavigate();
+  const [records, setRecords] = useState([]);
+
+  useEffect(() => {
+    const loadedMock = [...mockEHR];
+    const saved = localStorage.getItem("scannedPrescriptions");
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          setRecords([...parsed, ...loadedMock]);
+          return;
+        }
+      } catch (e) {
+        console.error("Error parsing scanned prescriptions", e);
+      }
+    }
+    setRecords(loadedMock);
+  }, []);
 
   const getBase64ImageFromURL = (url) => {
     return new Promise((resolve, reject) => {
@@ -196,7 +214,7 @@ const MedicalHistory = () => {
           </button>
         </div>
         <div className="list-group">
-          {mockEHR.map(record => (
+          {records.map(record => (
             <div key={record.id} className="list-group-item shadow-sm mb-4" style={{ borderRadius: "20px", border: "1px solid #e0e0e0", padding: "20px", background: "#ffffff" }}>
               <div className="d-flex justify-content-between align-items-start mb-3">
                 <div>

@@ -19,6 +19,7 @@ import {
   Utensils,
   MessageCircle as Bot,
   Stethoscope,
+  CreditCard,
 } from "lucide-react";
 import doctor1 from "../assets/demodoctor/doctor1.jpg";
 import doctor2 from "../assets/demodoctor/doctor2.jpg";
@@ -234,6 +235,15 @@ const Home = () => {
         title="Previous Reports & Prescriptions"
         subtitle="Access your medical history"
         onClick={() => navigateTo("/medicine")}
+      />
+
+      <SectionCard
+        icon={<CreditCard />}
+        iconColor="#1E3A8A"
+        backgroundColor="#3B82F6"
+        title="Billing & Payments"
+        subtitle="Your Bills & Transaction History"
+        onClick={() => navigateTo("/billing")}
       />
 
       <SectionCard

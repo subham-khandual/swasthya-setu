@@ -3,13 +3,23 @@
 .chatContainer {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: calc(100vh - 80px);
+  height: calc(100dvh - 80px);
   max-width: 100%;
   margin: 0;
   background-color: #0f172a;
   overflow: hidden;
   font-family: 'Inter', sans-serif;
   color: #f1f5f9;
+}
+
+.floatingChat {
+  height: 100% !important;
+  max-height: 100% !important;
+}
+
+.floatingChat .avatar {
+  display: none !important;
 }
 
 .header {
@@ -341,6 +351,65 @@
 
 @media (max-width: 600px) {
   .chatContainer {
-    height: 100%;
+    height: calc(100vh - 80px);
+    height: calc(100dvh - 80px);
+  }
+  .chatBox {
+    padding: 16px;
+    gap: 12px;
+  }
+  .header {
+    padding: 12px 16px;
+  }
+  .avatar {
+    width: 38px;
+    height: 38px;
+    margin-right: 12px;
+  }
+  .headerTitle {
+    font-size: 18px;
+  }
+  .headerSubtitle {
+    font-size: 11px;
+  }
+  .quickReplies {
+    padding: 8px 12px;
+    gap: 6px;
+  }
+  .quickReplies button {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+  .footer {
+    padding: 10px 12px;
+  }
+  .inputWrapper {
+    padding: 4px 8px;
+  }
+  .smileyIcon, .attachmentIcon {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+    margin: 0 4px;
+  }
+  .inputField {
+    font-size: 14px;
+    padding: 6px 8px;
+  }
+  .sendButton, .micButton {
+    width: 36px;
+    height: 36px;
+  }
+  .user-message, .ai-message {
+    max-width: 85%;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chatContainer {
+    height: calc(100vh - 70px);
+    height: calc(100dvh - 70px);
   }
 }

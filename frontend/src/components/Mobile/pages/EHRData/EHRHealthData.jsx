@@ -6,6 +6,20 @@ import html2pdf from "html2pdf.js";
 import logo from "../../../assets/SwasthyaSetuLogo.png";
 
 const EHRHealthData = ({ patientId }) => {
+  const getResolvedPatientId = () => {
+    try {
+      const lastEditedId = localStorage.getItem('lastEditedPatientId');
+      if (lastEditedId) return lastEditedId;
+
+      const userStr = localStorage.getItem('user');
+      const user = userStr ? JSON.parse(userStr) : null;
+      return user?.userId || user?._id || patientId || "67ccc44c671f5aa635f458e1";
+    } catch (e) {
+      return patientId || "67ccc44c671f5aa635f458e1";
+    }
+  };
+  const resolvedPatientId = getResolvedPatientId();
+
   const [patientData, setPatientData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,7 +31,7 @@ const EHRHealthData = ({ patientId }) => {
   useEffect(() => {
     const fetchPatientData = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/api/patients/${patientId}`, {
+        const response = await axios.get(`${API_BASE_URL}/api/patients/${resolvedPatientId}`, {
           withCredentials: true,
         });
         console.log(response.data);
@@ -30,15 +44,15 @@ const EHRHealthData = ({ patientId }) => {
       }
     };
 
-    if (patientId) {
+    if (resolvedPatientId) {
       fetchPatientData();
     }
-  }, [patientId]);
+  }, [resolvedPatientId]);
 
   useEffect(() => {
     const fetchBills = async () => {
       try {
-        const res = await fetch(`${API_BASE_URL}/api/billing/patient/${patientId}`, {
+        const res = await fetch(`${API_BASE_URL}/api/billing/patient/${resolvedPatientId}`, {
           credentials: "include",
         });
         if (!res.ok) return;
@@ -48,10 +62,10 @@ const EHRHealthData = ({ patientId }) => {
         console.error("Failed to fetch bills for EHR:", err);
       }
     };
-    if (patientId) {
+    if (resolvedPatientId) {
       fetchBills();
     }
-  }, [patientId]);
+  }, [resolvedPatientId]);
 
   const formatDate = (date) => {
     return date ? new Date(date).toLocaleDateString() : "N/A";
@@ -95,13 +109,13 @@ const EHRHealthData = ({ patientId }) => {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("patientId", patientId);
+      formData.append("patientId", resolvedPatientId);
       await axios.post(`${API_BASE_URL}/api/patients/upload`, formData, {
         withCredentials: true,
         headers: { "Content-Type": "multipart/form-data" },
       });
       alert("File uploaded successfully!");
-      const response = await axios.get(`${API_BASE_URL}/api/patients/${patientId}`, {
+      const response = await axios.get(`${API_BASE_URL}/api/patients/${resolvedPatientId}`, {
         withCredentials: true,
       });
       setPatientData(response.data);

@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Activity, Pill, Stethoscope, FileText, CreditCard, User, History, Plus, Save } from 'lucide-react';
+import { Activity, Pill, Stethoscope, FileText, CreditCard, User, History, Plus, Save, Trash2 } from 'lucide-react';
 import styles from './EHRManagement.module.css';
 
 const API_URL = `${API_BASE_URL}/api`;
@@ -132,10 +132,36 @@ const EHRManagement = () => {
       fetchPatients();
       setSelectedPatient(response.data.patient);
       setFormData(response.data.patient);
+      if (response.data.patient && response.data.patient._id) {
+        localStorage.setItem('lastEditedPatientId', response.data.patient._id);
+      }
       setUploadFiles({});
     } catch (error) {
       console.error(error);
       toast.error('Failed to save patient record: ' + (error.response?.data?.error || error.message));
+    }
+  };
+
+  const deletePatientRecord = async () => {
+    if (!selectedPatient._id) return;
+    if (!window.confirm(`Are you sure you want to delete the EHR record for ${selectedPatient.name}?`)) {
+      return;
+    }
+
+    try {
+      await axios.delete(`${API_URL}/patients/${selectedPatient._id}`);
+      toast.success('Patient record deleted successfully');
+      
+      // Clear selection and state
+      setSelectedPatient(null);
+      setFormData({});
+      localStorage.removeItem('lastEditedPatientId');
+      setUploadFiles({});
+      // Refresh list
+      fetchPatients();
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to delete patient record: ' + (error.response?.data?.error || error.message));
     }
   };
 
@@ -188,9 +214,16 @@ const EHRManagement = () => {
             <div className={styles.ehrEditorContainer}>
               <div className={styles.ehrHeader}>
                 <h2>{selectedPatient._id ? `Editing Record: ${formData.name}` : `New Patient Record`}</h2>
-                <button className="btn btn-success d-flex align-items-center" onClick={savePatientRecord}>
-                  <Save size={18} className="me-2" /> Save Record
-                </button>
+                <div className="d-flex gap-2">
+                  {selectedPatient._id && (
+                    <button className="btn btn-danger d-flex align-items-center" onClick={deletePatientRecord}>
+                      <Trash2 size={18} className="me-2" /> Remove Record
+                    </button>
+                  )}
+                  <button className="btn btn-success d-flex align-items-center" onClick={savePatientRecord}>
+                    <Save size={18} className="me-2" /> Save Record
+                  </button>
+                </div>
               </div>
 
               {/* Navigation Tabs */}
@@ -202,6 +235,7 @@ const EHRManagement = () => {
                 <button className={`${styles.tabBtn} ${activeTab === 'labs' ? styles.active : ''}`} onClick={() => setActiveTab('labs')}><FileText size={16} /> Lab Reports</button>
                 <button className={`${styles.tabBtn} ${activeTab === 'vitals' ? styles.active : ''}`} onClick={() => setActiveTab('vitals')}><Activity size={16} /> Vitals</button>
                 <button className={`${styles.tabBtn} ${activeTab === 'billing' ? styles.active : ''}`} onClick={() => setActiveTab('billing')}><CreditCard size={16} /> Billing</button>
+                <button className={`${styles.tabBtn} ${activeTab === 'lifestyle' ? styles.active : ''}`} onClick={() => setActiveTab('lifestyle')}><Activity size={16} /> Lifestyle & Vaccines</button>
               </div>
 
               {/* Tab Contents */}
@@ -210,9 +244,13 @@ const EHRManagement = () => {
                 {/* 1. Basic Info */}
                 {activeTab === 'basic' && (
                   <div className="row g-3">
-                    <div className="col-md-6">
+                    <div className="col-md-3">
                       <label className="form-label">Full Name</label>
                       <input type="text" className="form-control" name="name" value={formData.name || ''} onChange={handleChange} required />
+                    </div>
+                    <div className="col-md-3">
+                      <label className="form-label">Nick Name</label>
+                      <input type="text" className="form-control" name="nickname" value={formData.nickname || ''} onChange={handleChange} />
                     </div>
                     <div className="col-md-3">
                       <label className="form-label">Date of Birth</label>
@@ -246,6 +284,44 @@ const EHRManagement = () => {
                       <label className="form-label">Emergency Contact Phone</label>
                       <input type="text" className="form-control" name="emergencyPhone" value={formData.emergencyPhone || ''} onChange={handleChange} />
                     </div>
+                    <div className="col-md-4">
+                      <label className="form-label">Occupation</label>
+                      <input type="text" className="form-control" name="occupation" value={formData.occupation || ''} onChange={handleChange} />
+                    </div>
+                    <div className="col-md-4">
+                      <label className="form-label">Insurance Provider</label>
+                      <input type="text" className="form-control" name="insuranceProvider" value={formData.insuranceProvider || ''} onChange={handleChange} />
+                    </div>
+                    <div className="col-md-4">
+                      <label className="form-label">Insurance Policy Number</label>
+                      <input type="text" className="form-control" name="insurancePolicyNumber" value={formData.insurancePolicyNumber || ''} onChange={handleChange} />
+                    </div>
+                    <div className="col-md-3">
+                      <label className="form-label">Weight (kg)</label>
+                      <input type="number" className="form-control" name="weight" value={formData.weight || ''} onChange={handleChange} />
+                    </div>
+                    <div className="col-md-3">
+                      <label className="form-label">Height (cm)</label>
+                      <input type="number" className="form-control" name="height" value={formData.height || ''} onChange={handleChange} />
+                    </div>
+                    <div className="col-md-3">
+                      <label className="form-label">Blood Pressure</label>
+                      <input type="text" className="form-control" name="bloodPressure" placeholder="120/80" value={formData.bloodPressure || ''} onChange={handleChange} />
+                    </div>
+                    <div className="col-md-3">
+                      <label className="form-label">Total Donations</label>
+                      <input type="number" className="form-control" name="totalDonations" value={formData.totalDonations || 0} onChange={handleChange} />
+                    </div>
+                    <div className="col-md-4">
+                      <label className="form-label">Last Donation Date</label>
+                      <input type="date" className="form-control" name="lastDonationDate" value={formData.lastDonationDate ? new Date(formData.lastDonationDate).toISOString().split('T')[0] : ''} onChange={handleChange} />
+                    </div>
+                    <div className="col-md-4 mt-4">
+                      <div className="form-check">
+                        <input className="form-check-input" type="checkbox" name="eligibleForDonation" checked={formData.eligibleForDonation !== false} onChange={handleChange} id="eligibleForDonation" />
+                        <label className="form-check-label" htmlFor="eligibleForDonation">Eligible for Blood Donation</label>
+                      </div>
+                    </div>
                   </div>
                 )}
 
@@ -259,6 +335,40 @@ const EHRManagement = () => {
                     <div className="col-md-12">
                       <label className="form-label">Medication Allergies (comma separated)</label>
                       <input type="text" className="form-control" name="medicationAllergies" value={(formData.medicationAllergies || []).join(', ')} onChange={(e) => handleArrayChange('medicationAllergies', e.target.value)} />
+                    </div>
+                    <div className="col-md-12">
+                      <label className="form-label">Other Allergies</label>
+                      <input type="text" className="form-control" name="otherAllergies" value={formData.otherAllergies || ''} onChange={handleChange} />
+                    </div>
+                    <div className="col-md-12">
+                      <label className="form-label">Family History (comma separated)</label>
+                      <input type="text" className="form-control" name="familyHistory" value={(formData.familyHistory || []).join(', ')} onChange={(e) => handleArrayChange('familyHistory', e.target.value)} />
+                    </div>
+                    <div className="col-md-12">
+                      <label className="form-label">Other Family History Details</label>
+                      <input type="text" className="form-control" name="otherFamilyHistory" value={formData.otherFamilyHistory || ''} onChange={handleChange} />
+                    </div>
+                    <div className="col-md-6 mt-4">
+                      <div className="form-check">
+                        <input className="form-check-input" type="checkbox" name="currentMeds" checked={formData.currentMeds || false} onChange={handleChange} id="currentMeds" />
+                        <label className="form-check-label" htmlFor="currentMeds">Currently taking Medications</label>
+                      </div>
+                    </div>
+                    <div className="col-md-12">
+                      <label className="form-label">Medications List (comma separated)</label>
+                      <input type="text" className="form-control" name="medsList" value={(formData.medsList || []).join(', ')} onChange={(e) => handleArrayChange('medsList', e.target.value)} />
+                    </div>
+                    <div className="col-md-12">
+                      <label className="form-label">Past Medications</label>
+                      <input type="text" className="form-control" name="pastMeds" value={formData.pastMeds || ''} onChange={handleChange} />
+                    </div>
+                    <div className="col-md-12">
+                      <label className="form-label">Ongoing Therapies (comma separated)</label>
+                      <input type="text" className="form-control" name="ongoingTherapies" value={(formData.ongoingTherapies || []).join(', ')} onChange={(e) => handleArrayChange('ongoingTherapies', e.target.value)} />
+                    </div>
+                    <div className="col-md-12">
+                      <label className="form-label">Other Therapies</label>
+                      <input type="text" className="form-control" name="ongoingTherapiesOthers" value={formData.ongoingTherapiesOthers || ''} onChange={handleChange} />
                     </div>
                     <div className="col-md-6 mt-4">
                       <div className="form-check">
@@ -278,6 +388,28 @@ const EHRManagement = () => {
                 {/* 3. Doctor Visits */}
                 {activeTab === 'visits' && (
                   <div>
+                    <div className="row g-3 mb-4 p-3 bg-light rounded border">
+                      <h5>Current Observations</h5>
+                      <div className="col-md-6">
+                        <label className="form-label">Primary Symptoms</label>
+                        <input type="text" className="form-control" name="primarySymptoms" value={formData.primarySymptoms || ''} onChange={handleChange} />
+                      </div>
+                      <div className="col-md-6">
+                        <label className="form-label">Initial Diagnosis</label>
+                        <input type="text" className="form-control" name="initialDiagnosis" value={formData.initialDiagnosis || ''} onChange={handleChange} />
+                      </div>
+                      <div className="col-md-4 mt-4">
+                        <div className="form-check">
+                          <input className="form-check-input" type="checkbox" name="followUpRequired" checked={formData.followUpRequired || false} onChange={handleChange} id="followUpRequired" />
+                          <label className="form-check-label" htmlFor="followUpRequired">Follow-Up Required</label>
+                        </div>
+                      </div>
+                      <div className="col-md-8">
+                        <label className="form-label">Follow-Up Date</label>
+                        <input type="date" className="form-control" name="followUpDate" value={formData.followUpDate ? new Date(formData.followUpDate).toISOString().split('T')[0] : ''} onChange={handleChange} disabled={!formData.followUpRequired} />
+                      </div>
+                    </div>
+
                     <div className="d-flex justify-content-between mb-3">
                       <h4>Consultation History</h4>
                       <button className="btn btn-sm btn-outline-primary shadow-sm" onClick={() => addArrayItem('doctorVisits', { doctorName: '', visitDate: '', diagnosis: '', notes: '' })}>
@@ -288,7 +420,7 @@ const EHRManagement = () => {
                       <div key={index} className={styles.dynamicCard}>
                         <div className="row g-2">
                           <div className="col-md-5">
-                            <input type="text" className="form-control" placeholder="Doctor Name" value={visit.doctorName} onChange={(e) => updateArrayItem('doctorVisits', index, 'doctorName', e.target.value)} />
+                            <input type="text" className="form-control" placeholder="Doctor Name" value={visit.doctorName || ''} onChange={(e) => updateArrayItem('doctorVisits', index, 'doctorName', e.target.value)} />
                           </div>
                           <div className="col-md-4">
                             <input type="date" className="form-control" value={visit.visitDate ? new Date(visit.visitDate).toISOString().split('T')[0] : ''} onChange={(e) => updateArrayItem('doctorVisits', index, 'visitDate', e.target.value)} />
@@ -297,10 +429,10 @@ const EHRManagement = () => {
                             <button className="btn btn-sm btn-danger" onClick={() => removeArrayItem('doctorVisits', index)}>Remove</button>
                           </div>
                           <div className="col-md-12 mt-2">
-                            <input type="text" className="form-control" placeholder="Diagnosis" value={visit.diagnosis} onChange={(e) => updateArrayItem('doctorVisits', index, 'diagnosis', e.target.value)} />
+                            <input type="text" className="form-control" placeholder="Diagnosis" value={visit.diagnosis || ''} onChange={(e) => updateArrayItem('doctorVisits', index, 'diagnosis', e.target.value)} />
                           </div>
                           <div className="col-md-12 mt-2">
-                            <textarea className="form-control" placeholder="Consultation Notes" value={visit.notes} onChange={(e) => updateArrayItem('doctorVisits', index, 'notes', e.target.value)} rows="2"></textarea>
+                            <textarea className="form-control" placeholder="Consultation Notes" value={visit.notes || ''} onChange={(e) => updateArrayItem('doctorVisits', index, 'notes', e.target.value)} rows="2"></textarea>
                           </div>
                         </div>
                       </div>
@@ -326,13 +458,13 @@ const EHRManagement = () => {
                     {(formData.prescriptions || []).map((med, index) => (
                       <div key={index} className="row g-2 mb-2 align-items-center">
                         <div className="col-md-5">
-                          <input type="text" className="form-control" placeholder="Paracetamol 500mg" value={med.medicineName} onChange={(e) => updateArrayItem('prescriptions', index, 'medicineName', e.target.value)} />
+                          <input type="text" className="form-control" placeholder="Paracetamol 500mg" value={med.medicineName || ''} onChange={(e) => updateArrayItem('prescriptions', index, 'medicineName', e.target.value)} />
                         </div>
                         <div className="col-md-3">
-                          <input type="text" className="form-control" placeholder="1-0-1" value={med.dosage} onChange={(e) => updateArrayItem('prescriptions', index, 'dosage', e.target.value)} />
+                          <input type="text" className="form-control" placeholder="1-0-1" value={med.dosage || ''} onChange={(e) => updateArrayItem('prescriptions', index, 'dosage', e.target.value)} />
                         </div>
                         <div className="col-md-3">
-                          <input type="text" className="form-control" placeholder="5 Days" value={med.duration} onChange={(e) => updateArrayItem('prescriptions', index, 'duration', e.target.value)} />
+                          <input type="text" className="form-control" placeholder="5 Days" value={med.duration || ''} onChange={(e) => updateArrayItem('prescriptions', index, 'duration', e.target.value)} />
                         </div>
                         <div className="col-md-1 text-center">
                           <button className="btn btn-sm btn-outline-danger" onClick={() => removeArrayItem('prescriptions', index)}>X</button>
@@ -345,6 +477,12 @@ const EHRManagement = () => {
                 {/* 5. Lab Reports */}
                 {activeTab === 'labs' && (
                   <div className="row g-4">
+                    <div className="col-md-12 mb-2">
+                      <div className="form-check">
+                        <input className="form-check-input" type="checkbox" name="geneticOrBiopsyTest" checked={formData.geneticOrBiopsyTest || false} onChange={handleChange} id="geneticOrBiopsyTest" />
+                        <label className="form-check-label" htmlFor="geneticOrBiopsyTest">Genetic or Biopsy Test Conducted</label>
+                      </div>
+                    </div>
                     <div className="col-md-6">
                       <div className={styles.fileUploadCard}>
                         <h5>Blood Test Report</h5>
@@ -394,10 +532,10 @@ const EHRManagement = () => {
                           <input type="date" className="form-control form-control-sm" value={vital.date ? new Date(vital.date).toISOString().split('T')[0] : ''} onChange={(e) => updateArrayItem('vitals', index, 'date', e.target.value)} />
                         </div>
                         <div className="col-md-2">
-                          <input type="text" className="form-control form-control-sm" placeholder="120/80" value={vital.bloodPressure} onChange={(e) => updateArrayItem('vitals', index, 'bloodPressure', e.target.value)} />
+                          <input type="text" className="form-control form-control-sm" placeholder="120/80" value={vital.bloodPressure || ''} onChange={(e) => updateArrayItem('vitals', index, 'bloodPressure', e.target.value)} />
                         </div>
                         <div className="col-md-2">
-                          <input type="number" className="form-control form-control-sm" placeholder="Sugar" value={vital.sugarLevel} onChange={(e) => updateArrayItem('vitals', index, 'sugarLevel', e.target.value)} />
+                          <input type="number" className="form-control form-control-sm" placeholder="Sugar" value={vital.sugarLevel || ''} onChange={(e) => updateArrayItem('vitals', index, 'sugarLevel', e.target.value)} />
                         </div>
                         <div className="col-md-2">
                           <input type="number" className="form-control form-control-sm" placeholder="Heart Rate" value={vital.heartRate} onChange={(e) => updateArrayItem('vitals', index, 'heartRate', e.target.value)} />
@@ -451,6 +589,88 @@ const EHRManagement = () => {
                         </div>
                       </div>
                     ))}
+                  </div>
+                )}
+
+                {/* 8. Lifestyle & Vaccines */}
+                {activeTab === 'lifestyle' && (
+                  <div className="row g-3">
+                    <h5>Lifestyle Factors</h5>
+                    <div className="col-md-4">
+                      <label className="form-label">Smoking Status</label>
+                      <select className="form-select" name="smokingStatus" value={formData.smokingStatus || ''} onChange={handleChange}>
+                        <option value="">Select Status</option>
+                        <option value="Never">Never</option>
+                        <option value="Former">Former</option>
+                        <option value="Current">Current</option>
+                      </select>
+                    </div>
+                    {formData.smokingStatus === 'Current' && (
+                      <div className="col-md-4">
+                        <label className="form-label">Cigarettes per Day</label>
+                        <input type="number" className="form-control" name="cigarettesPerDay" value={formData.cigarettesPerDay || ''} onChange={handleChange} />
+                      </div>
+                    )}
+                    <div className="col-md-4">
+                      <label className="form-label">Exercise Frequency</label>
+                      <select className="form-select" name="exerciseFrequency" value={formData.exerciseFrequency || ''} onChange={handleChange}>
+                        <option value="">Select Frequency</option>
+                        <option value="Never">Never</option>
+                        <option value="Rarely">Rarely</option>
+                        <option value="Occasionally">Occasionally</option>
+                        <option value="Regularly">Regularly</option>
+                      </select>
+                    </div>
+                    <div className="col-md-4">
+                      <label className="form-label">Sleep Hours / Day</label>
+                      <input type="number" className="form-control" name="sleepHours" value={formData.sleepHours || ''} onChange={handleChange} />
+                    </div>
+                    <div className="col-md-6">
+                      <label className="form-label">Diet Type (comma separated)</label>
+                      <input type="text" className="form-control" name="dietType" value={(formData.dietType || []).join(', ')} onChange={(e) => handleArrayChange('dietType', e.target.value)} />
+                    </div>
+                    <div className="col-md-6">
+                      <label className="form-label">Other Diet Details</label>
+                      <input type="text" className="form-control" name="dietTypeOther" value={formData.dietTypeOther || ''} onChange={handleChange} />
+                    </div>
+                    <div className="col-md-4">
+                      <label className="form-label">Alcohol Consumption</label>
+                      <select className="form-select" name="alcoholConsumption" value={formData.alcoholConsumption || ''} onChange={handleChange}>
+                        <option value="">Select Consumption</option>
+                        <option value="Never">Never</option>
+                        <option value="Occasionally">Occasionally</option>
+                        <option value="Regularly">Regularly</option>
+                      </select>
+                    </div>
+                    {['Occasionally', 'Regularly'].includes(formData.alcoholConsumption) && (
+                      <div className="col-md-4">
+                        <label className="form-label">Alcohol Frequency</label>
+                        <input type="text" className="form-control" name="alcoholFrequency" value={formData.alcoholFrequency || ''} onChange={handleChange} />
+                      </div>
+                    )}
+
+                    <hr className="my-4" />
+                    <h5>Immunizations & Vaccines</h5>
+                    <div className="col-md-3 mt-4">
+                      <div className="form-check">
+                        <input className="form-check-input" type="checkbox" name="polioVaccine" checked={formData.polioVaccine || false} onChange={handleChange} id="polioVaccine" />
+                        <label className="form-check-label" htmlFor="polioVaccine">Polio Vaccine</label>
+                      </div>
+                    </div>
+                    <div className="col-md-4">
+                      <label className="form-label">Last Tetanus Shot</label>
+                      <input type="date" className="form-control" name="tetanusShot" value={formData.tetanusShot ? new Date(formData.tetanusShot).toISOString().split('T')[0] : ''} onChange={handleChange} />
+                    </div>
+                    <div className="col-md-5">
+                      <label className="form-label">COVID-19 Vaccine</label>
+                      <input type="text" className="form-control" name="covidVaccine" value={formData.covidVaccine || ''} onChange={handleChange} />
+                    </div>
+                    <div className="col-md-3 mt-4">
+                      <div className="form-check">
+                        <input className="form-check-input" type="checkbox" name="covidBooster" checked={formData.covidBooster || false} onChange={handleChange} id="covidBooster" />
+                        <label className="form-check-label" htmlFor="covidBooster">COVID Booster</label>
+                      </div>
+                    </div>
                   </div>
                 )}
 

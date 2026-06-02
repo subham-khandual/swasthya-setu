@@ -6,14 +6,14 @@ import Picker from "emoji-picker-react";
 import suusriAvatar from "../../../assets/suusri_avatar.png";
 
 const GROQ_API_KEY = process.env.REACT_APP_GROQ_API_KEY;
-const Chat = () => {
+const Chat = ({ isFloating = false }) => {
   const [userInput, setUserInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [conversationHistory, setConversationHistory] = useState([]);
   const [isTyping, setIsTyping] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
-  const userName = "Subham";
+  const [userName, setUserName] = useState("Subham");
   const chatEndRef = useRef(null);
   const navigate = useNavigate();
 
@@ -101,24 +101,78 @@ const Chat = () => {
       };
     }
 
-    // Fetch real EHR data
-    const fetchEHRData = async () => {
+    // Helper to calculate age from DOB
+    const calculateAge = (dob) => {
+      if (!dob) return "N/A";
+      const birthDate = new Date(dob);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+      }
+      return age >= 0 ? age : 0;
+    };
+
+    // Fetch real EHR data and greet dynamically
+    const fetchEHRDataAndGreet = async () => {
       try {
-        const patientId = "67ccc44c671f5aa635f458e1"; // Hardcoded patient ID from routes.js
+        const userStr = localStorage.getItem('user');
+        const user = userStr ? JSON.parse(userStr) : null;
+        const patientId = localStorage.getItem('lastEditedPatientId') || user?.userId || user?._id || "67ccc44c671f5aa635f458e1";
         const response = await fetch(`${API_BASE_URL}/api/patients/${patientId}`);
         if (!response.ok) throw new Error("Failed to fetch patient records");
         const data = await response.json();
         setDynamicEhrData(data);
+
+        const name = data.nickname || data.name || "Subham";
+        setUserName(name);
+
+        const welcomeText = `Welcome, ${name}! Main hoon Suusri, apki cute health assistant. Bol na, kya hua hai, bandhu? Aaj kya help karu?`;
+        const spokenWelcome = `स्वागत है, ${name}! मैं हूँ सूसरी, आपकी प्यारी हेल्थ असिस्टेंट। बोलो ना, क्या हुआ है, बंधु? आज क्या मदद करूँ?`;
+
+        setMessages([{
+          text: welcomeText,
+          sender: "ai",
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        }]);
+
+        setConversationHistory([
+          {
+            role: "model",
+            parts: [{ text: welcomeText }],
+          }
+        ]);
+
+        speakText(spokenWelcome);
       } catch (err) {
         console.error("Error fetching dynamic EHR data:", err);
+        const welcomeText = `Welcome, Subham! Main hoon Suusri, apki cute health assistant. Bol na, kya hua hai, bandhu? Aaj kya help karu?`;
+        const spokenWelcome = `स्वागत है, शुभम! मैं हूँ सूसरी, आपकी प्यारी हेल्थ असिस्टेंट। बोलो ना, क्या हुआ है, बंधु? आज क्या मदद करूँ?`;
+
+        setMessages([{
+          text: welcomeText,
+          sender: "ai",
+          timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        }]);
+
+        setConversationHistory([
+          {
+            role: "model",
+            parts: [{ text: welcomeText }],
+          }
+        ]);
+
+        speakText(spokenWelcome);
       }
     };
-    fetchEHRData();
-  }, []);
+
+    fetchEHRDataAndGreet();
+  }, [speakText]);
 
   const [dynamicEhrData, setDynamicEhrData] = useState(null);
 
-  // Subham's EHR Data
+  // Subham's EHR Data (Fallback)
   const ehrData = {
     name: "Subham Khandual",
     dob: "07/11/2005",
@@ -206,26 +260,6 @@ const Chat = () => {
       Response: "Subham, heart disease history ko dekhte hue doctor se milna acha idea hai. Main tujhe doctors page pe redirect karti hoon!"`,
   };
 
-  useEffect(() => {
-    const initialMessages = [{
-      text: `Welcome, ${userName}! Main hoon Suusri, apki cute health assistant. Bol na, kya hua hai, bandhu? Aaj kya help karu? ...`,
-      sender: "ai",
-      timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-    }];
-    setMessages(initialMessages);
-
-    const initialHistory = [
-      {
-        role: "model",
-        parts: [{ text: `Welcome, ${userName}! Main hoon Suusri, teri cute health assistant. Bol na, kya hua hai, bandhu? Aaj kya help karu? ...` }],
-      },
-    ];
-    setConversationHistory(initialHistory);
-
-    const hindiWelcome = `स्वागत है, ${userName}! मैं हूँ सूसरी, आपकी प्यारी हेल्थ असिस्टेंट। बोलो ना, क्या हुआ है, बंधु? आज क्या मदद करूँ? ...`;
-    speakText(hindiWelcome);
-  }, [userName, speakText]); // Added speakText to dependencies
-
   // Save messages to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("suusriMessages", JSON.stringify(messages));
@@ -286,9 +320,9 @@ const Chat = () => {
       recognition.current.start();
       setMessages((prev) => [
         ...prev,
-        { text: "Sun rahi hoon, Subham! Bol na...", sender: "ai", timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) },
+        { text: `Sun rahi hoon, ${userName}! Bol na...`, sender: "ai", timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) },
       ]);
-      speakText("सुन रही हूँ, Subham! बोल ना...");
+      speakText(`सुन रही हूँ, ${userName}! बोल ना...`);
     }
   };
 
@@ -352,8 +386,21 @@ const Chat = () => {
     try {
       const redirectPath = redirectToFeature(input);
       if (redirectPath) {
-        const redirectMessage = `Subham, main Mujhe ${redirectPath.split('/')[1].replace('-', ' ')} page pe le jati hoon! Ek second ruko...`;
-        const hindiRedirectMessage = `Subham, मैं तुझे ${redirectPath.split('/')[1].replace('-', ' ')} पेज पर ले जाती हूँ! एक सेकंड रुको...`;
+        let displayFeature = redirectPath.split('/')[1].replace(/-/g, ' ');
+        displayFeature = displayFeature.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+        
+        if (displayFeature.includes("Doctor") || displayFeature.includes("Appointment") || displayFeature.toLowerCase().includes("doc")) {
+          displayFeature = "Book Appointment";
+        } else if (displayFeature.toLowerCase().includes("blood")) {
+          displayFeature = "Blood Donation";
+        } else if (displayFeature.toLowerCase().includes("med")) {
+          displayFeature = "Medicine";
+        } else if (displayFeature.toLowerCase().includes("hosp")) {
+          displayFeature = "Hospital";
+        }
+
+        const redirectMessage = `${userName}, mein tujhe ${displayFeature} page pe le jata hun!`;
+        const hindiRedirectMessage = `${userName}, मैं तुझे ${displayFeature} पेज पर ले जाता हूँ!`;
         setMessages((prev) => [
           ...prev,
           { text: redirectMessage, sender: "ai", timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) },
@@ -454,10 +501,14 @@ const Chat = () => {
     }
   };
 
+  const shouldHideAvatar = isFloating || window.location.pathname !== "/suusri";
+
   return (
-    <div className={styles.chatContainer}>
+    <div className={`${styles.chatContainer} ${shouldHideAvatar ? styles.floatingChat : ""}`}>
       <div className={styles.header}>
-        <img src={suusriAvatar} alt="Suusri Avatar" className={styles.avatar} loading="lazy" decoding="async" />
+        {!shouldHideAvatar && (
+          <img src={suusriAvatar} alt="Suusri Avatar" className={styles.avatar} loading="lazy" decoding="async" />
+        )}
         <div className={styles.headerInfo}>
           <span className={styles.headerTitle}>Suusri</span>
           <span className={styles.headerSubtitle}>Smart Universal AI Assistant</span>

@@ -10,7 +10,7 @@ const billSchema = new mongoose.Schema(
     currency: { type: String, default: "INR" },
     status: {
       type: String,
-      enum: ["Pending", "Paid", "Cancelled"],
+      enum: ["Pending", "Paid", "Failed", "Cancelled"],
       default: "Pending",
     },
     paymentMethod: { type: String }, // e.g., card, upi, insurance

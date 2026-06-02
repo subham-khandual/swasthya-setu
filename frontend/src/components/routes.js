@@ -161,7 +161,7 @@ function RoutesOfThePage() {
                     <Route path="/nutrition" element={<P><><Nutrition /><NavBar /></></P>} />
                     <Route path="/EHRHealthData" element={<P><><EHRHealthData patientId="67ccc44c671f5aa635f458e1" /><NavBar /></></P>} />
                     <Route path='/ambulance' element={<P><><Ambulance /><NavBar /></></P>} />
-                    <Route path='/suusri' element={<P><><Chat /></></P>} />
+                    <Route path='/suusri' element={<P><><Chat /><NavBar /></></P>} />
                     <Route path='/hospitals' element={<P><><HospitalDashboard /><NavBar /></></P>} />
                     <Route path="/all-hospitals" element={<P><><AllHospitals /><NavBar /></></P>} />
                     <Route
