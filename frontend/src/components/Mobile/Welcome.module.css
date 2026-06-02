@@ -1,13 +1,35 @@
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f8f9fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: radial-gradient(circle, #ffffff 0%, #f5f7fa 100%);
+  overflow: hidden;
+}
+
+.logo {
+  width: 150px;
+  height: auto;
+  animation: premiumEntrance 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.08));
+}
+
+@keyframes premiumEntrance {
+  0% {
+    transform: scale(0.85);
+    opacity: 0;
   }
-  
-  .logo {
-    width: 150px;
-    height: auto;
+  30% {
+    transform: scale(1.03);
+    opacity: 1;
   }
-  
+  80% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.96);
+    opacity: 0;
+  }
+}

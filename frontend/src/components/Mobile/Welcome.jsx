@@ -7,9 +7,10 @@ const Welcome = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setTimeout(() => {
+    const timer = setTimeout(() => {
       navigate("/home");
-    }, 4300);
+    }, 1200);
+    return () => clearTimeout(timer);
   }, [navigate]);
 
   return (
