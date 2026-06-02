@@ -41,6 +41,11 @@ const EHRManagement = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+    if (name === 'phone' || name === 'emergencyPhone') {
+      if (value !== '' && !/^[6-9]\d{0,9}$/.test(value)) {
+        return;
+      }
+    }
     setFormData({
       ...formData,
       [name]: type === 'checkbox' ? checked : value
@@ -82,7 +87,7 @@ const EHRManagement = () => {
   const savePatientRecord = async () => {
     // Client-side validations
     const nameRegex = /^[A-Za-z]{2,}(?:\s+[A-Za-z]+)+$/;
-    const phoneRegex = /^(?:\+91)?[6789]\d{9}$/;
+    const phoneRegex = /^[6-9]\d{9}$/;
 
     if (!formData.name || !nameRegex.test(formData.name.trim())) {
       toast.error('Please enter a valid Full Name (First and Last name, letters only).');
@@ -90,24 +95,43 @@ const EHRManagement = () => {
     }
 
     if (!formData.phone || !phoneRegex.test(formData.phone)) {
-      toast.error('Contact Number must be 10 digits, start with 6/7/8/9, and contain no leading zeros or special characters.');
+      toast.error('Contact Number must be exactly 10 digits and start with 6, 7, 8, or 9.');
       return;
     }
 
-    if (formData.emergencyPhone && !phoneRegex.test(formData.emergencyPhone)) {
-      toast.error('Emergency Contact Number must be a valid 10-digit number like the Contact Number.');
+    if (!formData.emergencyPhone || !phoneRegex.test(formData.emergencyPhone)) {
+      toast.error('Emergency Contact Number must be exactly 10 digits and start with 6, 7, 8, or 9.');
       return;
     }
+
+    // Normalize Insurance fields: if empty, 'no', or any case of 'n/a', set to 'N/A'
+    let insuranceProviderVal = formData.insuranceProvider ? formData.insuranceProvider.trim() : '';
+    if (!insuranceProviderVal || insuranceProviderVal.toLowerCase() === 'no' || insuranceProviderVal.toLowerCase() === 'n/a') {
+      insuranceProviderVal = 'N/A';
+    }
+
+    let insurancePolicyNumberVal = formData.insurancePolicyNumber ? formData.insurancePolicyNumber.trim() : '';
+    if (!insurancePolicyNumberVal || insurancePolicyNumberVal.toLowerCase() === 'no' || insurancePolicyNumberVal.toLowerCase() === 'n/a') {
+      insurancePolicyNumberVal = 'N/A';
+    }
+
+    const updatedFormData = {
+      ...formData,
+      insuranceProvider: insuranceProviderVal,
+      insurancePolicyNumber: insurancePolicyNumberVal
+    };
+
+    setFormData(updatedFormData);
 
     try {
       const formDataToSend = new FormData();
       
       // Append all normal keys (stringify arrays/objects)
-      Object.keys(formData).forEach(key => {
-        if (typeof formData[key] === 'object' && formData[key] !== null && !(formData[key] instanceof Date)) {
-          formDataToSend.append(key, JSON.stringify(formData[key]));
+      Object.keys(updatedFormData).forEach(key => {
+        if (typeof updatedFormData[key] === 'object' && updatedFormData[key] !== null && !(updatedFormData[key] instanceof Date)) {
+          formDataToSend.append(key, JSON.stringify(updatedFormData[key]));
         } else {
-          formDataToSend.append(key, formData[key] || '');
+          formDataToSend.append(key, updatedFormData[key] || '');
         }
       });
 
@@ -270,7 +294,7 @@ const EHRManagement = () => {
                     </div>
                     <div className="col-md-4">
                       <label className="form-label">Contact Phone</label>
-                      <input type="text" className="form-control" name="phone" value={formData.phone || ''} onChange={handleChange} required />
+                      <input type="text" className="form-control" name="phone" placeholder="e.g. 9876543210" value={formData.phone || ''} onChange={handleChange} required />
                     </div>
                     <div className="col-md-5">
                       <label className="form-label">Address</label>
@@ -282,7 +306,7 @@ const EHRManagement = () => {
                     </div>
                     <div className="col-md-6">
                       <label className="form-label">Emergency Contact Phone</label>
-                      <input type="text" className="form-control" name="emergencyPhone" value={formData.emergencyPhone || ''} onChange={handleChange} />
+                      <input type="text" className="form-control" name="emergencyPhone" placeholder="e.g. 9876543210" value={formData.emergencyPhone || ''} onChange={handleChange} />
                     </div>
                     <div className="col-md-4">
                       <label className="form-label">Occupation</label>
@@ -290,11 +314,11 @@ const EHRManagement = () => {
                     </div>
                     <div className="col-md-4">
                       <label className="form-label">Insurance Provider</label>
-                      <input type="text" className="form-control" name="insuranceProvider" value={formData.insuranceProvider || ''} onChange={handleChange} />
+                      <input type="text" className="form-control" name="insuranceProvider" placeholder="Type provider or 'N/A' if none" value={formData.insuranceProvider || ''} onChange={handleChange} />
                     </div>
                     <div className="col-md-4">
                       <label className="form-label">Insurance Policy Number</label>
-                      <input type="text" className="form-control" name="insurancePolicyNumber" value={formData.insurancePolicyNumber || ''} onChange={handleChange} />
+                      <input type="text" className="form-control" name="insurancePolicyNumber" placeholder="Type policy number or 'N/A' if none" value={formData.insurancePolicyNumber || ''} onChange={handleChange} />
                     </div>
                     <div className="col-md-3">
                       <label className="form-label">Weight (kg)</label>

@@ -209,7 +209,7 @@ const Chat = ({ isFloating = false }) => {
   const medConfig = {
     identity: {
       name: "Suusri",
-      creator: "LogicLoom Team",
+      creator: "Bug busters",
       gender: "female",
       language: "Odia",
       age: 20,
@@ -238,7 +238,7 @@ const Chat = ({ isFloating = false }) => {
       5. Handles both medical and non-medical conversations
       
       Special Cases:
-      - When asked "tumhe kon banaya hai" respond in Hindi: "मुझे LogicLoom टीम ने बनाया है 🧑💻"
+      - When asked "tumhe kon banaya hai" respond in Hindi: "मुझे Bug busters टीम ने बनाया है 🧑💻"
       - When asked about creator/developer, respond in user's language
       - For casual greetings, respond warmly in user's language
       6. Keep essential English medical terms intact

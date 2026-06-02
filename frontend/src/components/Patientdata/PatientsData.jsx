@@ -135,11 +135,31 @@ const PatientsData = () => {
 
     const validateForm = () => {
         const newErrors = {};
-        if (!formData.name) newErrors.name = 'Full Name is required';
+        const nameRegex = /^[A-Za-z]{2,}(?:\s+[A-Za-z]+)+$/;
+        const phoneRegex = /^[6-9]\d{9}$/;
+
+        if (!formData.name) {
+            newErrors.name = 'Full Name is required';
+        } else if (!nameRegex.test(formData.name.trim())) {
+            newErrors.name = 'Please enter a valid Full Name (First and Last name, letters only)';
+        }
+
         if (!formData.dob) newErrors.dob = 'Date of Birth is required';
-        if (!formData.phone) newErrors.phone = 'Phone Number must be +91 XXXXXXXXXX format';
+
+        if (!formData.phone) {
+            newErrors.phone = 'Phone Number is required';
+        } else if (!phoneRegex.test(formData.phone)) {
+            newErrors.phone = 'Phone Number must be exactly 10 digits and start with 6, 7, 8, or 9';
+        }
+
         if (!formData.emergencyName) newErrors.emergencyName = 'Emergency Contact Name is required';
-        if (!formData.emergencyPhone) newErrors.emergencyPhone = 'Emergency Phone must be +91 XXXXXXXXXX format';
+
+        if (!formData.emergencyPhone) {
+            newErrors.emergencyPhone = 'Emergency Phone is required';
+        } else if (!phoneRegex.test(formData.emergencyPhone)) {
+            newErrors.emergencyPhone = 'Emergency Phone must be exactly 10 digits and start with 6, 7, 8, or 9';
+        }
+
         if (!formData.bloodType) newErrors.bloodType = 'Blood Type is required';
         if (!formData.weight || formData.weight <= 0) newErrors.weight = 'Weight must be a positive number (kg)';
         if (!formData.height || formData.height <= 0) newErrors.height = 'Height must be a positive number (cm)';
@@ -154,14 +174,38 @@ const PatientsData = () => {
             return;
         }
 
+        // Normalize Insurance fields: if empty, 'no', or any case of 'n/a', set to 'N/A'
+        let insuranceProviderVal = formData.insuranceProvider ? formData.insuranceProvider.trim() : '';
+        if (!insuranceProviderVal || insuranceProviderVal.toLowerCase() === 'no' || insuranceProviderVal.toLowerCase() === 'n/a') {
+            insuranceProviderVal = 'N/A';
+        }
+
+        let insurancePolicyNumberVal = formData.insurancePolicyNumber ? formData.insurancePolicyNumber.trim() : '';
+        if (!insurancePolicyNumberVal || insurancePolicyNumberVal.toLowerCase() === 'no' || insurancePolicyNumberVal.toLowerCase() === 'n/a') {
+            insurancePolicyNumberVal = 'N/A';
+        }
+
+        const normalizedFormData = {
+            ...formData,
+            insuranceProvider: insuranceProviderVal,
+            insurancePolicyNumber: insurancePolicyNumberVal
+        };
+
+        // Update state to show the normalized values in the UI
+        setFormData(prev => ({
+            ...prev,
+            insuranceProvider: insuranceProviderVal,
+            insurancePolicyNumber: insurancePolicyNumberVal
+        }));
+
         const formDataToSend = new FormData();
-        Object.keys(formData).forEach(key => {
-            if (formData[key] instanceof File) {
-                formDataToSend.append(key, formData[key]);
-            } else if (Array.isArray(formData[key])) {
-                formDataToSend.append(key, JSON.stringify(formData[key]));
+        Object.keys(normalizedFormData).forEach(key => {
+            if (normalizedFormData[key] instanceof File) {
+                formDataToSend.append(key, normalizedFormData[key]);
+            } else if (Array.isArray(normalizedFormData[key])) {
+                formDataToSend.append(key, JSON.stringify(normalizedFormData[key]));
             } else {
-                formDataToSend.append(key, formData[key] || '');
+                formDataToSend.append(key, normalizedFormData[key] || '');
             }
         });
 
@@ -258,12 +302,12 @@ const PatientsData = () => {
                                 required
                                 value={formData.phone}
                                 onChange={(e) => {
-                                    const value = e.target.value;
-                                    if (/^\+91\d{0,10}$/.test(value) || value === '') {
-                                        handleChange(e);
-                                    }
-                                }}
-                                placeholder="+91 XXXXXXXXXX"
+                                     const value = e.target.value;
+                                     if (value === '' || /^[6-9]\d{0,9}$/.test(value)) {
+                                         handleChange(e);
+                                     }
+                                 }}
+                                placeholder="e.g. 9876543210"
                                 className={`${styles.textInput} ${errors.phone ? styles.errorInput : ''}`}
                             />
                             {errors.phone && <span className={styles.error}>{errors.phone}</span>}
@@ -293,12 +337,12 @@ const PatientsData = () => {
                                 required
                                 value={formData.emergencyPhone}
                                 onChange={(e) => {
-                                    const value = e.target.value;
-                                    if (/^\+91\d{0,10}$/.test(value) || value === '') {
-                                        handleChange(e);
-                                    }
-                                }}
-                                placeholder="+91 XXXXXXXXXX"
+                                     const value = e.target.value;
+                                     if (value === '' || /^[6-9]\d{0,9}$/.test(value)) {
+                                         handleChange(e);
+                                     }
+                                 }}
+                                placeholder="e.g. 9876543210"
                                 className={`${styles.textInput} ${errors.emergencyPhone ? styles.errorInput : ''}`}
                             />
                             {errors.emergencyPhone && <span className={styles.error}>{errors.emergencyPhone}</span>}
@@ -343,6 +387,7 @@ const PatientsData = () => {
                                 name="insuranceProvider"
                                 value={formData.insuranceProvider}
                                 onChange={handleChange}
+                                placeholder="Type provider or 'N/A' if none"
                                 className={styles.textInput}
                             />
                         </label>
@@ -355,6 +400,7 @@ const PatientsData = () => {
                                 name="insurancePolicyNumber"
                                 value={formData.insurancePolicyNumber}
                                 onChange={handleChange}
+                                placeholder="Type policy number or 'N/A' if none"
                                 className={styles.textInput}
                             />
                         </label>
