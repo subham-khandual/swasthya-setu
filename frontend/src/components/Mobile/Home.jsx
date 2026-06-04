@@ -205,9 +205,9 @@ const Home = () => {
         icon={<Bot />}
         iconColor="#4A90E2"
         backgroundColor="#5DADE2"
-        title="AI Chat Bot SUUSRI"
+        title="AI Chat Bot SAYRAA"
         subtitle="Get instant health assistance"
-        onClick={() => navigateTo("/suusri")}
+        onClick={() => navigateTo("/sayraa")}
       />
 
       <SectionCard

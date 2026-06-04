@@ -6,7 +6,7 @@
 
 - **Blood Donation**: Find nearby blood donation centers, track donations, and receive blood on time.
 - **Consultation with Experts**: Connect with doctors and healthcare providers online for consultations.
-- **Susri Healthcare Chatbot**: An advanced AI-powered assistant providing rapid first aid guidance and instant medical consultations.
+- **Sayraa Healthcare Chatbot**: An advanced AI-powered assistant providing rapid first aid guidance and instant medical consultations.
 - **AI Doctor Assistance**: Use AI-powered tools to get medical advice based on symptoms or conditions.
 - **Medicine Shop**: Browse a range of medicines and order them conveniently from online pharmacies.
 
@@ -131,8 +131,8 @@ If you'd like to contribute to this project, feel free to open an issue or submi
 
 ## License
 
-This project is licensed under the MIT License - see the [suusri-health-care-ai-assistant.vercel.app
-](SUUSRI) file for details.
+This project is licensed under the MIT License - see the [sayraa-health-care-ai-assistant.vercel.app
+](SAYRAA) file for details.
 
 ### Key Sections Breakdown:
 1. **Frontend Setup**: Install dependencies for the React app inside the `frontend/` folder.

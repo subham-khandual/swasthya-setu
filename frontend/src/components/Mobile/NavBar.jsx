@@ -18,7 +18,7 @@ const NavBar = () => {
   const screens = [
     "/dashboard",            // Home/Dashboard screen
     "/blood-donate-receive", // Donate screen
-    "/suusri",               // SuuSri (AI Chat Bot) screen
+    "/sayraa",               // Sayraa (AI Chat Bot) screen
     "/blood-test",           // Test screen
     "/medicine",             // Medicine screen
   ];
@@ -28,7 +28,7 @@ const NavBar = () => {
     const path = location.pathname;
     if (path === "/dashboard" || path === "/Landingpage") return 0; // Home
     if (path.includes("/blood-donate-receive")) return 1; // Donate
-    if (path.includes("/suusri")) return 2; // SuuSri (Center button)
+    if (path.includes("/sayraa")) return 2; // Sayraa (Center button)
     if (path.includes("/blood-test")) return 3; // Test
     if (path.includes("/medicine")) return 4; // Medicine
     return -1; // No tab selected
@@ -73,11 +73,11 @@ const NavBar = () => {
           onClick={() => handleNavigation(2)}
           role="button"
           tabIndex={0}
-          aria-label="SuuSri Chat Bot"
+          aria-label="Sayraa Chat Bot"
           onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleNavigation(2); }}
         >
           <Bot className={styles.navIcon} aria-hidden="true" />
-          <span className={styles.navLabel}>SuuSri</span>
+          <span className={styles.navLabel}>Sayraa</span>
         </div>
 
         <div

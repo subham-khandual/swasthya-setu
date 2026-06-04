@@ -18,7 +18,7 @@ const NotFound = () => {
         </div>
         
         <h1 className={styles.errorCode}>404</h1>
-        <h2 className={styles.title}>Oops! Even Suusri can't find this page.</h2>
+        <h2 className={styles.title}>Oops! Even Sayraa can't find this page.</h2>
         <p className={styles.description}>
           The link you followed might be broken, or the page may have been moved. 
           Don't worry, even the best health journeys have a few detours!

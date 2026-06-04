@@ -22,6 +22,7 @@ const specialties = [
   { id: "Dermatologist", img: genPhysicianImg }, // Fallback
   { id: "ENT Specialist", img: genPhysicianImg },
   { id: "Nutritionist/Dietitian", img: genPhysicianImg },
+  { id: "Psychiatrist", img: genPhysicianImg },
 ];
 
 const VideoConsultation = () => {
@@ -109,7 +110,7 @@ const VideoConsultation = () => {
         });
         
       // Initial AI Greeting
-      handleAiResponse(`Namaste! Main Dr. AI hoon, aapki ${selectedSpecialty.id}. Boliye, aaj main aapki kya madad kar sakti hoon?`);
+      handleAiResponse(`Namaste! Main Dr. Sayraa hoon, aapki ${selectedSpecialty.id}. Boliye, aaj main aapki kya madad kar sakti hoon?`);
     } else {
       if (localVideoRef.current?.srcObject) {
         localVideoRef.current.srcObject.getTracks().forEach(track => track.stop());
@@ -162,7 +163,7 @@ const VideoConsultation = () => {
             messages: [
               {
                 role: "system",
-                content: `You are an advanced AI Virtual Doctor specializing EXCLUSIVELY in ${selectedSpecialty.id}. Speak concisely, empathetically, and professionally like a real doctor in a telemedicine consultation. Keep responses to 2-3 short sentences. Respond in Hinglish (a mix of Hindi and English). Do NOT repeatedly state that you are a ${selectedSpecialty.id} in normal conversation.
+                content: `You are Dr. Sayraa, an advanced AI Virtual Doctor specializing EXCLUSIVELY in ${selectedSpecialty.id}. Speak concisely, empathetically, and professionally like a real doctor in a telemedicine consultation. Keep responses to 2-3 short sentences. Respond in Hinglish (a mix of Hindi and English). Do NOT repeatedly state that you are a ${selectedSpecialty.id} in normal conversation.
                 
 CRITICAL RULE: If the user asks about symptoms or a disease that is OUTSIDE of your specialty (${selectedSpecialty.id}), you MUST politely refuse to answer. You MUST start your response by stating your specialty exactly like this: "Mein ${selectedSpecialty.id} hun." Then, tell them which specific department doctor they SHOULD consult instead (e.g., "Bukhar ke liye aap General Physician se baat kar sakte hain"). Do not provide any medical advice for unrelated conditions.
                 
@@ -389,7 +390,7 @@ If it IS related to your specialty, analyze symptoms and provide basic guidance.
             )}
           </div>
           
-          <h2 style={{ color: "white", marginTop: "20px", fontWeight: "300" }}>Dr. AI ({selectedSpecialty.id})</h2>
+          <h2 style={{ color: "white", marginTop: "20px", fontWeight: "300" }}>Dr. Sayraa ({selectedSpecialty.id})</h2>
         </div>
       </div>
       
@@ -556,7 +557,8 @@ const mainVideoAreaStyle = {
   justifyContent: 'center',
   alignItems: 'center',
   position: 'relative',
-  zIndex: 10
+  zIndex: 10,
+  paddingBottom: '200px'
 };
 
 const localVideoStyle = {

@@ -4,7 +4,7 @@ import ProtectedRoute from './ProtectedRoute';
 const { Suspense, lazy } = React;
 
 const ChatBot = lazy(() => import('./Chat/Chatbot'));
-const Chat = lazy(() => import('./Chat/SuuSri/SuuSri'));
+const Chat = lazy(() => import('./Chat/Sayraa/Sayraa'));
 const AdminDashboard = lazy(() => import('./AdminDashboard/AdminDashboard'));
 const AdminLogin = lazy(() => import('./AdminDashboard/AdminLogin'));
 const AdminAuthOptions = lazy(() => import('./AdminDashboard/AdminAuthOptions'));
@@ -161,7 +161,7 @@ function RoutesOfThePage() {
                     <Route path="/nutrition" element={<P><><Nutrition /><NavBar /></></P>} />
                     <Route path="/EHRHealthData" element={<P><><EHRHealthData patientId="67ccc44c671f5aa635f458e1" /><NavBar /></></P>} />
                     <Route path='/ambulance' element={<P><><Ambulance /><NavBar /></></P>} />
-                    <Route path='/suusri' element={<P><><Chat /><NavBar /></></P>} />
+                    <Route path='/sayraa' element={<P><><Chat /><NavBar /></></P>} />
                     <Route path='/hospitals' element={<P><><HospitalDashboard /><NavBar /></></P>} />
                     <Route path="/all-hospitals" element={<P><><AllHospitals /><NavBar /></></P>} />
                     <Route

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import chatbot from "../assets/interactional-dialogue.png";
-import Chat from './SuuSri/SuuSri';
+import Chat from './Sayraa/Sayraa';
 
 const ChatBot = () => {
   const [show, setShow] = useState(false);
@@ -13,7 +13,7 @@ const ChatBot = () => {
     <>
       {/* Chat Bot Icon */}
       <div className="chat-bot-icon" onClick={handleShow}>
-        <span>SuuSri</span>
+        <span>Sayraa</span>
       </div>
 
       {/* Bootstrap Modal */}

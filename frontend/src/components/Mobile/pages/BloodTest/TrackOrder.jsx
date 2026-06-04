@@ -14,7 +14,7 @@ const defaultSimulatedMedicine = {
   totalAmount: 200,
   createdAt: "2026-03-24T18:00:00.000Z", // In the past, so it shows fully delivered by default
   shippingAddress: {
-    street: "Flat 405, SuuSri Green Heights, Sector 15",
+    street: "Flat 405, Sayraa Green Heights, Sector 15",
   }
 };
 
@@ -221,7 +221,7 @@ const TrackOrder = () => {
         totalAmount: 200,
         createdAt: newTimestamp,
         shippingAddress: {
-          street: "Flat 405, SuuSri Green Heights, Sector 15",
+          street: "Flat 405, Sayraa Green Heights, Sector 15",
         }
       };
       localStorage.setItem("sandbox_medicine", JSON.stringify(newMedOrder));

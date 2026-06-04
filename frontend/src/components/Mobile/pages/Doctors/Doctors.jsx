@@ -574,15 +574,6 @@ const Doctors = () => {
                   </div>
                 </div>
 
-                {appointmentType?.value === "video" && (
-                  <div className="mb-3" style={{ background: "white", padding: "15px", borderRadius: "8px", border: "1px dashed #ccc" }}>
-                    <label style={{ fontSize: "0.9rem", color: "#7f8c8d", display: "flex", alignItems: "center", gap: "5px" }}>
-                      <FileText size={16}/> Upload Medical Reports (Optional)
-                    </label>
-                    <input type="file" onChange={e => setMedicalReport(e.target.files[0])} className="form-control mt-2" style={{ fontSize: "0.85rem" }} />
-                    <p style={{ fontSize: "0.75rem", color: "#bdc3c7", marginTop: "5px", marginBottom: 0 }}>PDF, JPG, PNG formats supported. End-to-end encrypted.</p>
-                  </div>
-                )}
 
                 {appointmentType?.value === "inPerson" && (
                   <div className="mb-3">

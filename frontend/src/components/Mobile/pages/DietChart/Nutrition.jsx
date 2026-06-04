@@ -289,8 +289,8 @@ Ensure accurate nutritional data, proper calorie distribution based on the goal 
         <a className={`${styles.navLink} ${window.location.pathname === "/blood-test" ? styles.active : ""}`} href="/blood-test">
           <TestTube className={styles.navIcon} /> Test
         </a>
-        <button className={styles.suusriButton} onClick={() => window.location.href = "/suusri"}>
-          Suusri
+        <button className={styles.sayraaButton} onClick={() => window.location.href = "/sayraa"}>
+          Sayraa
         </button>
         <a className={`${styles.navLink} ${window.location.pathname === "/doctors" ? styles.active : ""}`} href="/doctors">
           <Stethoscope className={styles.navIcon} /> Doctor

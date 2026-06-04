@@ -495,7 +495,7 @@
     margin-bottom: 4px;
   }
   
-  .suusriButton {
+  .sayraaButton {
     background: #9b59b6;
     border-radius: 50%;
     width: 50px;
@@ -510,7 +510,7 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
   }
   
-  .suusriButton:hover {
+  .sayraaButton:hover {
     transform: scale(1.1);
     box-shadow: 0 6px 15px rgba(155, 89, 182, 0.4);
   }
@@ -631,7 +631,7 @@
       height: 20px;
     }
   
-    .suusriButton {
+    .sayraaButton {
       width: 45px;
       height: 45px;
       font-size: 0.8rem;
