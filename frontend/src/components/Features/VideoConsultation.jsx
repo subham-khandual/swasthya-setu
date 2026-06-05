@@ -201,8 +201,11 @@ If it IS related to your specialty, analyze symptoms and provide basic guidance.
     if (!window.speechSynthesis) return;
     window.speechSynthesis.cancel();
     
+    // Replace "Sayraa" with phonetic spelling for correct TTS pronunciation
+    const spokenText = text.replace(/Sayraa/gi, "Sigh-raa");
+    
     setTimeout(() => {
-        const utterance = new SpeechSynthesisUtterance(text);
+        const utterance = new SpeechSynthesisUtterance(spokenText);
         utterance.lang = "hi-IN";
         utterance.rate = 1.0;
         utterance.pitch = 1.2;

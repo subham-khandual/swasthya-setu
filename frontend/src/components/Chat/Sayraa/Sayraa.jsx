@@ -34,6 +34,9 @@ const Chat = ({ isFloating = false }) => {
       return;
     }
 
+    // Replace "Sayraa" with phonetic spelling for correct TTS pronunciation
+    const processedText = text.replace(/Sayraa/gi, "Sigh-raa");
+
     // Cancel any ongoing speech to start fresh immediately
     synth.cancel();
     currentUtterances.current = [];
@@ -49,14 +52,14 @@ const Chat = ({ isFloating = false }) => {
 
     // Determine the language of the entire text block to use consistent voice
     let lang = "hi-IN"; // Default to Hindi/Hinglish
-    if (/[\u0900-\u097F]/.test(text)) {
+    if (/[\u0900-\u097F]/.test(processedText)) {
       lang = "hi-IN";
-    } else if (/[\u0B00-\u0B7F]/.test(text)) {
+    } else if (/[\u0B00-\u0B7F]/.test(processedText)) {
       lang = "or-IN";
     } else {
       // Check for common Hinglish words
       const hinglishWords = /\b(hai|ko|apki|kya|hoon|main|se|ke|ki|aur|tu|tujhe|bol|na|kya|hua|bandhu|aaj|karu|achha|samajh|nayi|shuruaat|taiyar|le|jati|pe|ruko|milna)\b/i;
-      if (hinglishWords.test(text)) {
+      if (hinglishWords.test(processedText)) {
         lang = "hi-IN";
       } else {
         lang = "en-IN";
@@ -65,11 +68,11 @@ const Chat = ({ isFloating = false }) => {
 
     // Optimize chunking: Only split if text is longer than 150 chars to avoid delay between sentences
     let chunks = [];
-    if (text.length <= 150) {
-      chunks = [text.trim()];
+    if (processedText.length <= 150) {
+      chunks = [processedText.trim()];
     } else {
       // Split by sentence ending punctuation and group them to stay under 150 chars per chunk
-      const sentences = text.split(/([.?!;।\n]+)/);
+      const sentences = processedText.split(/([.?!;।\n]+)/);
       let currentChunk = "";
       
       for (let i = 0; i < sentences.length; i += 2) {
