@@ -131,8 +131,8 @@ If you'd like to contribute to this project, feel free to open an issue or submi
 
 ## License
 
-This project is licensed under the MIT License - see the [https://sayraa-health-care-ai-assistant.vercel.app
-](SAYRAA) file for details.
+This project is licensed under the MIT License - see the (https://sayraa-health-care-ai-assistant.vercel.app
+)(SAYRAA) file for details.
 
 ### Key Sections Breakdown:
 1. **Frontend Setup**: Install dependencies for the React app inside the `frontend/` folder.
