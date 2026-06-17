@@ -11,7 +11,7 @@ function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login, googleSignIn, resetPassword } = useAuth();
+  const { login, googleSignIn, resetPassword, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -47,7 +47,17 @@ function Login() {
 
         if (userRes.ok) {
           const userData = await userRes.json();
+          if (userData.userType === 'admin') {
+            toast.error('Access Denied: Admin accounts must use the Admin Login page.');
+            setError('Access Denied: Admin accounts must use the Admin Login page.');
+            await logout();
+            return;
+          }
           localStorage.setItem('user', JSON.stringify(userData));
+        } else {
+          toast.error('Failed to fetch user profile.');
+          await logout();
+          return;
         }
 
         toast.success('Login successful!');
@@ -69,6 +79,8 @@ function Login() {
       const result = await googleSignIn();
       const user = result.user;
 
+      const idToken = await user.getIdToken();
+
       // Sync with backend session
       const response = await fetch(`${API_BASE_URL}/api/auth/google-sync`, {
         method: 'POST',
@@ -76,10 +88,7 @@ function Login() {
           'Content-Type': 'application/json',
         },
         credentials: 'include',
-        body: JSON.stringify({
-          email: user.email,
-          name: user.displayName || user.email.split('@')[0],
-        }),
+        body: JSON.stringify({ idToken }),
       });
 
       if (response.ok) {
@@ -94,7 +103,17 @@ function Login() {
 
         if (userRes.ok) {
           const userData = await userRes.json();
+          if (userData.userType === 'admin') {
+            toast.error('Access Denied: Admin accounts must use the Admin Login page.');
+            setError('Access Denied: Admin accounts must use the Admin Login page.');
+            await logout();
+            return;
+          }
           localStorage.setItem('user', JSON.stringify(userData));
+        } else {
+          toast.error('Failed to fetch user profile.');
+          await logout();
+          return;
         }
 
         if (syncData.isNewUser) {

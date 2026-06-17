@@ -11,7 +11,7 @@ function AdminLogin() {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const { login } = useAuth();
+    const { login, logout } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -48,9 +48,11 @@ function AdminLogin() {
                         navigate('/admin-dashboard');
                     } else {
                         toast.error('Access Denied: You are not authorized as an admin.');
+                        await logout();
                     }
                 } else {
                     toast.error('Failed to fetch user profile.');
+                    await logout();
                 }
             } else {
                 const data = await response.json();

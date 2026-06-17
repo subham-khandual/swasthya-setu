@@ -37,8 +37,17 @@ const allowedOrigins = [
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.urlencoded({ extended: true }));
 
+const sessionSecret = process.env.SESSION_SECRET || (() => {
+  if (process.env.NODE_ENV === 'production') {
+    console.error("FATAL ERROR: SESSION_SECRET is not defined in production environment variables!");
+    process.exit(1);
+  }
+  console.warn("WARNING: SESSION_SECRET is missing. Generating a temporary random secret key for this session.");
+  return require('crypto').randomBytes(32).toString('hex');
+})();
+
 app.use(session({
-  secret: process.env.SESSION_SECRET || "@smarthealthcare123", // Keep fallback for local, but ensure it's set in Prod
+  secret: sessionSecret,
   resave: false,
   saveUninitialized: false, // Changed to false for better security
   proxy: process.env.NODE_ENV === 'production', // Trust Render proxy

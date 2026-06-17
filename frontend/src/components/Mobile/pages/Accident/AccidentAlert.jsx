@@ -183,8 +183,10 @@ const convertToIST = (time) => {
 };
 
 const AccidentAlert = () => {
+  const userStr = localStorage.getItem('user');
+  const userData = userStr ? JSON.parse(userStr) : null;
   const user = {
-    name: "Alekha Kumar Swain",
+    name: userData ? userData.userName : "Subham Khandual",
     emergencyContacts: ["+91 1234567890", "+91 9876543210"],
     bloodGroup: "A+",
     defaultLocation: { lat: 20.296071, lng: 85.824539 }, // Bhubaneswar

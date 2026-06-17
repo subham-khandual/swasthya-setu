@@ -47,8 +47,29 @@ router.post("/login", async (req, res) => {
 });
 
 router.post("/google-sync", async (req, res) => {
-  const { email, name } = req.body;
+  const { idToken } = req.body;
   try {
+    if (!idToken) {
+      return res.status(400).json({ error: "ID Token is required for synchronization" });
+    }
+
+    const axios = require("axios");
+    const firebaseApiKey = process.env.FIREBASE_API_KEY || "AIzaSyCfpU4Wme90GfOY41NB2p6okB83e4_uyvE";
+
+    // Verify token with Firebase Auth REST API
+    const verifyResponse = await axios.post(
+      `https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=${firebaseApiKey}`,
+      { idToken }
+    );
+
+    const firebaseUser = verifyResponse.data?.users?.[0];
+    if (!firebaseUser) {
+      return res.status(401).json({ error: "Invalid Firebase ID Token" });
+    }
+
+    const email = firebaseUser.email;
+    const name = firebaseUser.displayName || email.split("@")[0];
+
     let user = await User.findOne({ email });
     let isNewUser = false;
 
@@ -56,7 +77,7 @@ router.post("/google-sync", async (req, res) => {
       // Auto-register the user if they don't exist
       const placeholderPassword = await bcrypt.hash(Math.random().toString(36).slice(-10), 10);
       user = new User({
-        name: name || email.split("@")[0],
+        name: name,
         email,
         password: placeholderPassword,
         userType: "donor", // Default userType
@@ -78,8 +99,8 @@ router.post("/google-sync", async (req, res) => {
     };
     res.status(200).json({ success: true, message: "Session synchronized", isNewUser });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
+    console.error("Firebase ID Token verification error:", err.response?.data || err.message);
+    res.status(401).json({ error: "Authentication failed: Invalid token" });
   }
 });
 

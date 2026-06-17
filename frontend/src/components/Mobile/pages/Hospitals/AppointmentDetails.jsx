@@ -12,9 +12,12 @@ const AppointmentDetails = () => {
   const [downloading, setDownloading] = useState(false);
   const barcodeRef = useRef(null);
 
+  const userStr = localStorage.getItem('user');
+  const userData = userStr ? JSON.parse(userStr) : null;
+
   // Default appointment details if none provided
   const defaultDetails = {
-    patientName: "Alekhya Kumar Swain",
+    patientName: userData ? userData.userName : "Subham Khandual",
     hospitalName: "Apollo Hospitals",
     specialty: "Cardiology",
     doctorName: "Dr. Assigned",
@@ -22,7 +25,7 @@ const AppointmentDetails = () => {
     appointmentTime: "9:00 AM - 12:00 PM",
     bookingId: "APPT5B0P492JS",
     patientId: "PATWRSXQ0",
-    email: "alekhakumarswain111@gmail.com",
+    email: userData ? userData.email : "subhamkhandual@gmail.com",
   };
 
   const details = appointment || defaultDetails;

@@ -10,6 +10,28 @@ const PORT = process.env.PORT || 2001;
 
 const startServer = async () => {
   await connectDB();
+
+  // Auto-seed ambulances if none exist
+  try {
+    const Ambulance = require('./models/Ambulance');
+    const count = await Ambulance.countDocuments();
+    if (count === 0) {
+      console.log('No ambulances found in the database. Auto-seeding default ambulances...');
+      const defaultAmbulances = [
+        { number: "AMB-GOV-001", type: "Government", driverName: "Ravi Kumar", driverPhone: "+91 8888888888", paramedicName: "Anita Singh", location: { lat: 20.298071, lng: 85.822539 }, status: "Available" },
+        { number: "AMB-GOV-002", type: "Government", driverName: "Sita Devi", driverPhone: "+91 7777777777", paramedicName: "Vikram Singh", location: { lat: 20.297071, lng: 85.823539 }, status: "Available" },
+        { number: "AMB-PVT-BLS-01", type: "BLS", driverName: "Arun Mehta", driverPhone: "+91 9999999999", paramedicName: "Neha Kapoor", location: { lat: 20.294071, lng: 85.826539 }, status: "Available", cost: 1500 },
+        { number: "AMB-PVT-BLS-02", type: "BLS", driverName: "Sanjay Gupta", driverPhone: "+91 9888888888", paramedicName: "Meera Bai", location: { lat: 20.295071, lng: 85.825539 }, status: "Available", cost: 1400 },
+        { number: "AMB-PVT-ALS-01", type: "ALS", driverName: "Karan Singh", driverPhone: "+91 8888777777", paramedicName: "Rita Verma", location: { lat: 20.299071, lng: 85.821539 }, status: "Available", cost: 2000 },
+        { number: "AMB-PVT-AIR-01", type: "Air", driverName: "Sunil Rao", driverPhone: "+91 7777888888", paramedicName: "Anjali Desai", location: { lat: 20.296071, lng: 85.824539 }, status: "Available", cost: 50000 },
+      ];
+      await Ambulance.insertMany(defaultAmbulances);
+      console.log('Default ambulances auto-seeded successfully.');
+    }
+  } catch (seedErr) {
+    console.error('Error auto-seeding default ambulances:', seedErr);
+  }
+
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });

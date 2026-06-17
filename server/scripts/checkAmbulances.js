@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const Ambulance = require('../models/Ambulance');
 require('dotenv').config({ path: '../.env' });
+const dns = require('dns');
+
+// Fix for ECONNREFUSED on some systems by using Google DNS
+dns.setServers(['8.8.8.8', '8.8.4.4']);
 
 async function checkAmbulances() {
   try {

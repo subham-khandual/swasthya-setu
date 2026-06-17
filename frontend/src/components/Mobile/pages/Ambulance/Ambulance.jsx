@@ -85,8 +85,10 @@ const calculateETA = (distance) => {
 };
 
 const Ambulance = () => {
+  const userStr = localStorage.getItem('user');
+  const userData = userStr ? JSON.parse(userStr) : null;
   const user = {
-    name: "Alekha Kumar Swain",
+    name: userData ? userData.userName : "Subham Khandual",
     location: { lat: 20.296071, lng: 85.824539 }, // Default Bhubaneswar location
     emergencyContacts: ["+91 1234567890", "+91 9876543210"],
     medicalHistory: "No critical conditions",
@@ -237,12 +239,16 @@ const Ambulance = () => {
             setTrackingStatus("Reached");
             toast.success("Ambulance has reached your location.");
             clearInterval(interval);
+            if (bookingId) {
+              axios.patch(`${API_BASE_URL}/api/ambulance/booking/${bookingId}/status`, { status: 'Completed' })
+                .catch(err => console.error("Failed to complete booking:", err));
+            }
           }
         }
       }, 1000); // Update every second
     }
     return () => clearInterval(interval);
-  }, [isBooking, liveAmbulance, userLocation]);
+  }, [isBooking, liveAmbulance, userLocation, bookingId]);
 
   // Dummy data for hospitals (replace with API calls)
   const hospitals = [
@@ -776,9 +782,16 @@ const Ambulance = () => {
               </button>
               <button
                 className={styles.cancelBookingButton}
-                onClick={() => {
+                onClick={async () => {
                   setIsBooking(false);
                   toast.info("Booking canceled.");
+                  if (bookingId) {
+                    try {
+                      await axios.patch(`${API_BASE_URL}/api/ambulance/booking/${bookingId}/status`, { status: 'Cancelled' });
+                    } catch (err) {
+                      console.error("Failed to cancel booking:", err);
+                    }
+                  }
                 }}
               >
                 Cancel Booking
@@ -834,9 +847,16 @@ const Ambulance = () => {
           <p className={styles.privacyText}>Your data is encrypted and secure, compliant with GDPR/HIPAA standards.</p>
           <button
             className={styles.actionButton}
-            onClick={() => {
+            onClick={async () => {
               setIsBooking(false);
               toast.info("Booking canceled. Reason required.");
+              if (bookingId) {
+                try {
+                  await axios.patch(`${API_BASE_URL}/api/ambulance/booking/${bookingId}/status`, { status: 'Cancelled' });
+                } catch (err) {
+                  console.error("Failed to cancel booking:", err);
+                }
+              }
             }}
           >
             Cancel Booking

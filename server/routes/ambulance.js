@@ -63,8 +63,11 @@ router.post('/book', async (req, res) => {
     const trackingToken = crypto.randomBytes(16).toString('hex');
 
     // 3. Create booking
+    const mongoose = require('mongoose');
+    const isValidUser = mongoose.Types.ObjectId.isValid(userId);
+
     const newBooking = new AmbulanceBooking({
-      userId,
+      userId: isValidUser ? userId : undefined,
       patientName,
       ambulanceId: assignedAmbulance._id,
       location,
@@ -96,7 +99,7 @@ router.post('/book', async (req, res) => {
     });
 
   } catch (err) {
-    console.error(err.message);
+    console.error(err);
     res.status(500).send('Server Error');
   }
 });
