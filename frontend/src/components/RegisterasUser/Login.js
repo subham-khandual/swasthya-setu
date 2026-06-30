@@ -38,27 +38,16 @@ function Login() {
       });
 
       if (response.ok) {
-        // Fetch full user profile from backend to get userType
-        const userRes = await fetch(`${API_BASE_URL}/api/auth/user`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-        });
-
-        if (userRes.ok) {
-          const userData = await userRes.json();
-          if (userData.userType === 'admin') {
-            toast.error('Access Denied: Admin accounts must use the Admin Login page.');
-            setError('Access Denied: Admin accounts must use the Admin Login page.');
-            await logout();
-            return;
-          }
-          localStorage.setItem('user', JSON.stringify(userData));
-        } else {
-          toast.error('Failed to fetch user profile.');
+        const data = await response.json();
+        const userData = data.user;
+        
+        if (userData.userType === 'admin') {
+          toast.error('Access Denied: Admin accounts must use the Admin Login page.');
+          setError('Access Denied: Admin accounts must use the Admin Login page.');
           await logout();
           return;
         }
+        localStorage.setItem('user', JSON.stringify(userData));
 
         toast.success('Login successful!');
         navigate('/dashboard');
@@ -93,28 +82,15 @@ function Login() {
 
       if (response.ok) {
         const syncData = await response.json();
+        const userData = syncData.user;
         
-        // Fetch profile to get user details
-        const userRes = await fetch(`${API_BASE_URL}/api/auth/user`, {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-        });
-
-        if (userRes.ok) {
-          const userData = await userRes.json();
-          if (userData.userType === 'admin') {
-            toast.error('Access Denied: Admin accounts must use the Admin Login page.');
-            setError('Access Denied: Admin accounts must use the Admin Login page.');
-            await logout();
-            return;
-          }
-          localStorage.setItem('user', JSON.stringify(userData));
-        } else {
-          toast.error('Failed to fetch user profile.');
+        if (userData.userType === 'admin') {
+          toast.error('Access Denied: Admin accounts must use the Admin Login page.');
+          setError('Access Denied: Admin accounts must use the Admin Login page.');
           await logout();
           return;
         }
+        localStorage.setItem('user', JSON.stringify(userData));
 
         if (syncData.isNewUser) {
           toast.info('Please select your role');

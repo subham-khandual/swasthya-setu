@@ -39,7 +39,15 @@ router.post("/login", async (req, res) => {
       userName: user.name,
     };
     console.log("User session set:", req.session);
-    res.status(200).json({ message: "Login successful" });
+    res.status(200).json({ 
+      message: "Login successful",
+      user: {
+        userName: user.name,
+        userId: user._id,
+        userEmail: user.email,
+        userType: user.userType,
+      }
+    });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
@@ -97,7 +105,17 @@ router.post("/google-sync", async (req, res) => {
       userType: user.userType,
       userName: user.name,
     };
-    res.status(200).json({ success: true, message: "Session synchronized", isNewUser });
+    res.status(200).json({ 
+      success: true, 
+      message: "Session synchronized", 
+      isNewUser,
+      user: {
+        userName: user.name,
+        userId: user._id,
+        userEmail: user.email,
+        userType: user.userType,
+      }
+    });
   } catch (err) {
     console.error("Firebase ID Token verification error:", err.response?.data || err.message);
     res.status(401).json({ error: "Authentication failed: Invalid token" });

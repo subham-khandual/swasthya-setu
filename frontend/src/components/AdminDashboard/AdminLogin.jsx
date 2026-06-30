@@ -33,25 +33,15 @@ function AdminLogin() {
             });
 
             if (response.ok) {
-                // 3. Fetch full user profile from backend to verify userType
-                const userRes = await fetch(`${API_BASE_URL}/api/auth/user`, {
-                    method: 'GET',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                });
-
-                if (userRes.ok) {
-                    const userData = await userRes.json();
-                    if (userData.userType === 'admin') {
-                        localStorage.setItem('user', JSON.stringify(userData));
-                        toast.success('Admin Login successful!');
-                        navigate('/admin-dashboard');
-                    } else {
-                        toast.error('Access Denied: You are not authorized as an admin.');
-                        await logout();
-                    }
+                const data = await response.json();
+                const userData = data.user;
+                
+                if (userData && userData.userType === 'admin') {
+                    localStorage.setItem('user', JSON.stringify(userData));
+                    toast.success('Admin Login successful!');
+                    navigate('/admin-dashboard');
                 } else {
-                    toast.error('Failed to fetch user profile.');
+                    toast.error('Access Denied: You are not authorized as an admin.');
                     await logout();
                 }
             } else {
