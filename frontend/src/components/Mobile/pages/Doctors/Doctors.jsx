@@ -371,14 +371,14 @@ const Doctors = () => {
   return (
     <div className={styles.container} style={{ paddingBottom: "100px", maxWidth: "800px", margin: "0 auto" }}>
       {/* Header & Emergency */}
-      <div style={{ background: "linear-gradient(90deg, #2ecc71, #27ae60)", padding: "20px", borderRadius: "15px", color: "white", marginBottom: "20px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      <div style={{ background: "linear-gradient(90deg, #2ecc71, #27ae60)", padding: "20px", borderRadius: "15px", color: "white", marginBottom: "20px", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "15px" }}>
         <div>
           <h1 style={{ margin: 0, fontSize: "1.5rem", display: "flex", alignItems: "center", gap: "10px" }}><Stethoscope/> Doctor Consultancy</h1>
           <p style={{ margin: 0, fontSize: "0.9rem", opacity: 0.9 }}>HD Video Consultations & Appointments</p>
         </div>
         <button 
           onClick={() => navigate('/vedio-calling#emergency')} 
-          style={{ background: "#e74c3c", color: "white", border: "none", padding: "10px 15px", borderRadius: "8px", fontWeight: "bold", display: "flex", alignItems: "center", gap: "8px", boxShadow: "0 4px 10px rgba(231,76,60,0.4)", cursor: "pointer" }}
+          style={{ background: "#e74c3c", color: "white", border: "none", padding: "10px 15px", borderRadius: "8px", fontWeight: "bold", display: "flex", alignItems: "center", gap: "8px", boxShadow: "0 4px 10px rgba(231,76,60,0.4)", cursor: "pointer", flex: "1 1 auto", justifyContent: "center" }}
         >
           <PhoneCall size={18}/> Emergency
         </button>
@@ -389,15 +389,15 @@ const Doctors = () => {
         <h3 style={{ display: "flex", alignItems: "center", gap: "8px", color: "#2c3e50", marginBottom: "15px", fontSize: "1.2rem" }}>
           <Bot color="#2980b9"/> AI Doctor Match
         </h3>
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
           <input 
             type="text" 
             placeholder="Describe your symptoms (e.g. severe headache, chest pain...)" 
             value={symptomsInput}
             onChange={(e) => setSymptomsInput(e.target.value)}
-            style={{ flex: 1, padding: "10px", borderRadius: "8px", border: "1px solid #ced4da", outline: "none" }}
+            style={{ flex: "1 1 200px", padding: "10px", borderRadius: "8px", border: "1px solid #ced4da", outline: "none" }}
           />
-          <button onClick={handleAiRecommendation} disabled={isAiLoading} style={{ background: "#2980b9", color: "white", border: "none", padding: "0 20px", borderRadius: "8px", cursor: "pointer", display: "flex", alignItems: "center", gap: "5px" }}>
+          <button onClick={handleAiRecommendation} disabled={isAiLoading} style={{ background: "#2980b9", color: "white", border: "none", padding: "10px 20px", borderRadius: "8px", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: "5px", flex: "1 1 auto" }}>
             {isAiLoading ? <Loader size={18} className="spin" /> : "Match"}
           </button>
         </div>
@@ -427,7 +427,7 @@ const Doctors = () => {
 
       {/* Doctors Grid */}
       <h2 style={{ color: "#2c3e50", fontSize: "1.3rem", marginBottom: "15px" }}>Available Specialists</h2>
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "15px", marginBottom: "30px" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "15px", marginBottom: "30px" }}>
         {filteredDoctors.map(doc => (
           <div key={doc.id} style={{ background: "white", borderRadius: "12px", padding: "15px", boxShadow: "0 4px 10px rgba(0,0,0,0.05)", borderLeft: "4px solid #27ae60" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "10px" }}>
@@ -523,7 +523,7 @@ const Doctors = () => {
                 <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
                   
                   {/* Personal Details */}
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "15px" }}>
                     <div>
                       <label style={{ fontSize: "0.85rem", color: "#7f8c8d", fontWeight: "600", marginBottom: "5px", display: "block" }}>Patient Name</label>
                       <input type="text" placeholder="John Doe" value={userName} onChange={e => setUserName(e.target.value)} className="form-control" style={{ padding: "10px", borderRadius: "8px", border: "1px solid #dfe6e9", height: "42px" }} />
@@ -555,7 +555,7 @@ const Doctors = () => {
                   </div>
 
                   {/* Date & Time */}
-                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "15px" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: "15px" }}>
                     <div>
                       <label style={{ fontSize: "0.85rem", color: "#7f8c8d", fontWeight: "600", marginBottom: "5px", display: "block" }}>Date</label>
                       <input type="date" value={appointmentDate} onChange={e => setAppointmentDate(e.target.value)} min={new Date().toISOString().split("T")[0]} className="form-control" style={{ padding: "10px", borderRadius: "8px", border: "1px solid #dfe6e9", height: "42px" }} />
