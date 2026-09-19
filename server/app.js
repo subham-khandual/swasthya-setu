@@ -32,10 +32,29 @@ const frontendUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(
 const allowedOrigins = [
   "http://localhost:3000",
   "http://localhost:3002",
+  "https://frontend-five-khaki-22.vercel.app",
+  "https://swasthyasetu-tsbt.vercel.app",
   frontendUrl, 
 ].filter(Boolean);
 
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    try {
+      const parsedUrl = new URL(origin);
+      if (
+        allowedOrigins.includes(origin) ||
+        parsedUrl.hostname.endsWith(".vercel.app") ||
+        parsedUrl.hostname === "localhost" ||
+        parsedUrl.hostname === "127.0.0.1"
+      ) {
+        return callback(null, true);
+      }
+    } catch (_) {}
+    return callback(null, true);
+  },
+  credentials: true
+}));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 const sessionSecret = process.env.SESSION_SECRET || (() => {
