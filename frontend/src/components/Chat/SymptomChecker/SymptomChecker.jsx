@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "../../../apiConfig";
 import styles from "./SymptomChecker.module.css";
 import Picker from "emoji-picker-react";
+import { fetchAIReply } from "../aiClient";
 
-const GROQ_API_KEY = process.env.REACT_APP_GROQ_API_KEY;
 
 const SymptomChecker = () => {
   const [userInput, setUserInput] = useState("");
@@ -165,8 +165,7 @@ Your primary role is to analyze the symptoms provided by the user and provide pr
     setIsTyping(true);
 
     try {
-      const groqMessages = [
-        { role: "system", content: systemMessage },
+      const messagesPayload = [
         ...conversationHistory.map(msg => ({
           role: msg.role === "model" ? "assistant" : "user",
           content: msg.parts[0]?.text || ""
@@ -174,28 +173,15 @@ Your primary role is to analyze the symptoms provided by the user and provide pr
         { role: "user", content: input }
       ];
 
-      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${GROQ_API_KEY}`
-        },
-        body: JSON.stringify({
-          model: "llama-3.3-70b-versatile",
-          messages: groqMessages,
-          temperature: 0.7,
-          max_tokens: 800
-        })
+      const aiText = await fetchAIReply({
+        systemInstruction: systemMessage,
+        messages: messagesPayload,
+        temperature: 0.7,
+        maxTokens: 800
       });
 
-      if (!response.ok) {
-        throw new Error(`Groq API Error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const aiText = data.choices[0]?.message?.content;
-
       if (!aiText) throw new Error("Empty response from API");
+
 
       setConversationHistory((prev) => [
         ...prev,

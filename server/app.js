@@ -16,11 +16,12 @@ const billingRoutes = require('./routes/billing');
 const notificationRoutes = require('./routes/notification');
 const ambulanceRoutes = require('./routes/ambulance');
 const bloodTestRoutes = require('./routes/bloodTest');
+const aiRoutes = require('./routes/ai');
 
 const app = express();
 
 // Middleware
-app.use(express.json());
+app.use(express.json({ limit: '50mb' }));
 app.use((req, res, next) => {
   res.setHeader("Cross-Origin-Opener-Policy", "unsafe-none");
   res.setHeader("Cross-Origin-Embedder-Policy", "unsafe-none");
@@ -35,7 +36,7 @@ const allowedOrigins = [
 ].filter(Boolean);
 
 app.use(cors({ origin: allowedOrigins, credentials: true }));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 const sessionSecret = process.env.SESSION_SECRET || (() => {
   if (process.env.NODE_ENV === 'production') {
@@ -73,6 +74,7 @@ app.use('/api/billing', billingRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/ambulance', ambulanceRoutes);
 app.use('/api/blood-tests', bloodTestRoutes);
+app.use('/api/ai', aiRoutes);
 app.use('/api', patientRoutes);
 app.use('/api', doctorProfileRoutes);
 

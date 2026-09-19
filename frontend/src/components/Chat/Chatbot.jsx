@@ -18,11 +18,8 @@ const ChatBot = () => {
 
       {/* Bootstrap Modal */}
       <Modal show={show} onHide={handleClose} centered className="custom-modal">
-        <Modal.Header closeButton className="modal-header-custom">
-          {/* Remove the close button text */}
-        </Modal.Header>
-        <Modal.Body className="modal-body-custom" style={{ padding: '0', height: '80vh', maxHeight: '700px', minHeight: '400px' }}>
-          <Chat isFloating={true} />
+        <Modal.Body className="modal-body-custom" style={{ padding: '0', height: '80vh', maxHeight: '720px', minHeight: '440px' }}>
+          <Chat isFloating={true} onClose={handleClose} />
         </Modal.Body>
       </Modal>
     </>
